@@ -295,12 +295,11 @@ class Repository
      */
     public function getCommit($commitHash)
     {
-        $logs = $this->getClient()->run($this, "show --pretty=format:'<item><hash>%H</hash><short_hash>%h</short_hash><tree>%T</tree><parents>%P</parents><author>%an</author><author_email>%ae</author_email><date>%at</date><commiter>%cn</commiter><commiter_email>%ce</commiter_email><commiter_date>%ct</commiter_date><message><![CDATA[%s]]></message>' $commitHash");
-        $logs = explode("\n", $logs);
-
-        $messageBody = $this->getClient()->run($this, "show --pretty=format:'%b§' $commitHash");
-        $messageBody = explode('§', $messageBody);
-        $logs[0] .= "<body><![CDATA[" . trim($messageBody[0]) . "]]></body></item>";
+        $logs = $this->getClient()->run($this, "show --pretty=format:'<item><hash>%H</hash><short_hash>%h</short_hash><tree>%T</tree><parents>%P</parents><author>%an</author><author_email>%ae</author_email><date>%at</date><commiter>%cn</commiter><commiter_email>%ce</commiter_email><commiter_date>%ct</commiter_date><message><![CDATA[%s]]></message><body><![CDATA[§§§§§%b§§§§§' $commitHash");
+        $logs = explode("§§§§§", $logs);
+        $info = $logs[0] . trim($logs[1]) . ']]></body></item>';
+        $logs = explode("\n", $logs[2]);
+        $logs[0] = $info;
 
         // Read commit metadata
         $format = new PrettyFormat;
