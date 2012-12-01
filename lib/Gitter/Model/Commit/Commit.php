@@ -25,6 +25,7 @@ class Commit extends AbstractModel
     protected $commiter;
     protected $commiterDate;
     protected $message;
+    protected $body;
     protected $diffs;
 
     public function importData(array $data)
@@ -51,6 +52,12 @@ class Commit extends AbstractModel
         );
 
         $this->setMessage($data['message']);
+
+        if (isset($data['body'])) {
+            $this->setBody($data['body']);
+        } else {
+            $this->setBody("");
+        }
     }
 
     public function getHash()
@@ -141,6 +148,16 @@ class Commit extends AbstractModel
     public function setMessage($message)
     {
         $this->message = $message;
+    }
+
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    public function setBody($body)
+    {
+        $this->body = explode("\n", $body);
     }
 
     public function getDiffs()
