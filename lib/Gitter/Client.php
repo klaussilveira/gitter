@@ -279,13 +279,15 @@ class Client
     private function recurseDirectory(&$repositories, $path)
     {
         if (count($repositories) > self::MAX_REPOS) {
-            echo "Too many repo's found, not recursing further.\n";
+            #echo "Too many repo's found, not recursing further.\n";
             return;
         }
 
         # Paranoia check; don't recurse into git directories
+        # This could happen if a .git directory was defined in the repositories parameter in the config.ini.
+        # Not likely but it must be taken it into account anyway.
         $base = basename($path);
-        if ($base == ".git" || $base == "HEAD") {
+        if ($base == ".git") {
             #echo "Not doing git directories!\n";
             return;
         }
@@ -295,49 +297,19 @@ class Client
             return;
         }
 
-        $dir = new \DirectoryIterator($path);
-
-        $isRepository = false;
-        $isBare = false;
-        $cur_path = "";
-
-        # Preprocess returned directories
-        $recurse = array();
-        foreach ($dir as $file) {
-            $filename = $file->getFilename();
-
-            if (!$file->isDir()) continue;
-            if (!$file->isReadable()) continue;
-            if ($filename === "..") continue;   # Skip parent
-            if ((in_array($file->getPathname(), $this->getHidden()))) continue;  # Skip files configured as hidden
-
-            if ($filename === ".") {
-                $isBare = file_exists($file->getPathname() . '/HEAD');
-                $isRepository = file_exists($file->getPathname() . '/.git/HEAD');
-                $cur_path = $file->getPathname();
-
-                continue;
-            }
-
-            # Skip hidden files & dir's
-            if (strrpos($file->getFilename(), '.') === 0) {
-                continue;
-            }
-
-            $recurse [] = $file->getPathname();
-        }
+        $isBare = file_exists($path . '/HEAD');
+        $isRepository = file_exists($path . '/.git/HEAD');
 
         if ($isRepository || $isBare) {
-
             $tmp = array_reverse(explode(DIRECTORY_SEPARATOR, rtrim($path, DIRECTORY_SEPARATOR)));
             $filename = $tmp[0];
             # Pathological case: '/' was defined as root
             if ( $filename == '') $filename = 'root';
 
             if ($isBare) {
-                $description = $cur_path . '/description';
+                $description = $path . '/description';
             } else {
-                $description = $cur_path . '/.git/description';
+                $description = $path . '/.git/description';
             }
 
             if (file_exists($description)) {
@@ -349,14 +321,42 @@ class Client
 
             $repositories[$filename] = array(
                 'name' => $filename,
-                'relativePath' => $cur_path,        # TODO: Fix
-                'path' => $cur_path,
+                'relativePath' => $path,        # TODO: Fix
+                'path' => $path,
                 'description' => $description
             );
         }
 
-        foreach ($recurse as $item) {
-            $this->recurseDirectory($repositories, $item);
+        if (!$isBare) {
+            $dir = new \DirectoryIterator($path);
+
+            # Preprocess returned directories
+            $recurse = array();
+            foreach ($dir as $file) {
+                $filename = $file->getFilename();
+
+                if ($filename == ".git") continue;  # Skip .git's beforehand
+                if (!$file->isDir()) continue;
+                if (!$file->isReadable()) continue;
+                if ($filename === ".") continue;    # Skip current
+                if ($filename === "..") continue;   # Skip parent
+                if ((in_array($file->getPathname(), $this->getHidden()))) continue;  # Skip files configured as hidden
+
+                #echo "foreach filename is: $filename<br>\n";
+
+                # Skip hidden files & dir's
+                if (strrpos($file->getFilename(), '.') === 0) {
+                    continue;
+                }
+
+                $recurse[] = $file->getPathname();
+            }
+
+            #var_dump($recurse);
+
+            foreach ($recurse as $item) {
+                $this->recurseDirectory($repositories, $item);
+            }
         }
     }
 
