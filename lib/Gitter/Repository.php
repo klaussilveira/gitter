@@ -330,7 +330,7 @@ class Repository
         $commitInfo = substr($logs, 0, $xmlEnd);
         $commitData = substr($logs, $xmlEnd);
         $logs = explode("\n", $commitData);
-        array_shift($logs);
+        //array_shift($logs);
 
         // Read commit metadata
         $format = new PrettyFormat;
@@ -359,6 +359,11 @@ class Repository
         $lineNumOld = 0;
         $lineNumNew = 0;
         foreach ($logs as $log) {
+            # Skip empty lines
+            if ($log == "") {
+                continue;
+            }
+
             if ('diff' === substr($log, 0, 4)) {
                 if (isset($diff)) {
                     $diffs[] = $diff;
