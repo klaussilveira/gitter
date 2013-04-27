@@ -315,7 +315,7 @@ class Client
             if (file_exists($description)) {
                 $description = file_get_contents($description);
             } else {
-                $description = 'There is no repository description file. Please, create one to remove this message.';
+                $description = null;
             }
 
 
