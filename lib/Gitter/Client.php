@@ -297,8 +297,8 @@ class Client
             return;
         }
 
-        $isBare = file_exists($path . '/HEAD');
-        $isRepository = file_exists($path . '/.git/HEAD');
+        $isBare = count(glob($path . '/refs/heads/*')) !== 0;
+        $isRepository = count(glob($path . '/.git/refs/heads/*')) !== 0;
 
         if ($isRepository || $isBare) {
             $tmp = array_reverse(explode(DIRECTORY_SEPARATOR, rtrim($path, DIRECTORY_SEPARATOR)));
