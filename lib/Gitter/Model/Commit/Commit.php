@@ -172,7 +172,7 @@ class Commit extends Object
         return sizeof($this->diffs);
     }
 
-    protected function isCommit()
+    public function isCommit()
     {
         return true;
     }

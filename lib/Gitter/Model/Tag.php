@@ -27,7 +27,7 @@ class Tag extends Object
         return $this;
     }
 
-    protected function isTag()
+    public function isTag()
     {
         return true;
     }

@@ -15,22 +15,22 @@ class Object extends AbstractModel
 {
     protected $hash;
 
-    protected function isBlob()
+    public function isBlob()
     {
         return false;
     }
 
-    protected function isTag()
+    public function isTag()
     {
         return false;
     }
 
-    protected function isCommit()
+    public function isCommit()
     {
         return false;
     }
 
-    protected function isTree()
+    public function isTree()
     {
         return false;
     }

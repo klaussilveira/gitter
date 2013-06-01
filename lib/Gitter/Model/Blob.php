@@ -68,7 +68,7 @@ class Blob extends Object
         return $this;
     }
 
-    protected function isBlob()
+    public function isBlob()
     {
         return true;
     }

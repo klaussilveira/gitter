@@ -212,6 +212,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $commits = $repository->getCommits();
 
         foreach ($commits as $commit) {
+            $this->assertTrue($commit->isCommit());
             $this->assertInstanceOf('Gitter\Model\Commit\Commit', $commit);
             $this->assertEquals($commit->getMessage(), 'The truth unveiled');
             $this->assertInstanceOf('Gitter\Model\Commit\Author', $commit->getAuthor());
@@ -237,6 +238,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $commits = $repository->getCommits('test_file4.txt');
 
         foreach ($commits as $commit) {
+            $this->assertTrue($commit->isCommit());
             $this->assertInstanceOf('Gitter\Model\Commit\Commit', $commit);
             $this->assertEquals($commit->getMessage(), "The truth unveiled");
             $this->assertInstanceOf('Gitter\Model\Commit\Author', $commit->getAuthor());
@@ -251,6 +253,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $files = $repository->getTree('master');
 
         foreach ($files as $file) {
+            $this->assertTrue($file->isBlob());
             $this->assertInstanceOf('Gitter\Model\Blob', $file);
             $this->assertRegExp('/test_file[0-9]*.txt/', $file->getName());
             $this->assertEquals($file->getSize(), '55');
@@ -414,6 +417,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
         foreach ($commits as $commit) {
             $singleCommit = $repository->getCommit($commit->getHash());
+            $this->assertTrue($singleCommit->isCommit());
             $this->assertInstanceOf('Gitter\Model\Commit\Commit', $singleCommit);
             $this->assertInstanceOf('Gitter\Model\Commit\Author', $singleCommit->getAuthor());
             $this->assertEquals($singleCommit->getAuthor()->getName(), 'Luke Skywalker');

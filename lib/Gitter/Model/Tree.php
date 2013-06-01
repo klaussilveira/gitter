@@ -177,7 +177,7 @@ class Tree extends Object implements \RecursiveIterator
         return $this;
     }
 
-    protected function isTree()
+    public function isTree()
     {
         return true;
     }
