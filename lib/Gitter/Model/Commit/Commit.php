@@ -11,12 +11,11 @@
 
 namespace Gitter\Model\Commit;
 
-use Gitter\Model\AbstractModel;
+use Gitter\Model\Object;
 use Gitter\Util\DateTime;
 
-class Commit extends AbstractModel
+class Commit extends Object
 {
-    protected $hash;
     protected $shortHash;
     protected $treeHash;
     protected $parentsHash;
@@ -56,17 +55,6 @@ class Commit extends AbstractModel
         if (isset($data['body'])) {
             $this->setBody($data['body']);
         }
-    }
-
-    public function getHash()
-    {
-        return $this->hash;
-    }
-
-    public function setHash($hash)
-    {
-        $this->hash = $hash;
-        return $this;
     }
 
     public function getShortHash()
@@ -182,5 +170,10 @@ class Commit extends AbstractModel
     public function getChangedFiles()
     {
         return sizeof($this->diffs);
+    }
+
+    public function isCommit()
+    {
+        return true;
     }
 }

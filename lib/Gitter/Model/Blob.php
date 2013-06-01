@@ -13,10 +13,9 @@ namespace Gitter\Model;
 
 use Gitter\Repository;
 
-class Blob extends AbstractModel
+class Blob extends Object
 {
     protected $mode;
-    protected $hash;
     protected $name;
     protected $size;
 
@@ -45,18 +44,6 @@ class Blob extends AbstractModel
         return $this;
     }
 
-    public function getHash()
-    {
-        return $this->hash;
-    }
-
-    public function setHash($hash)
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
     public function getName()
     {
         return $this->name;
@@ -79,5 +66,10 @@ class Blob extends AbstractModel
         $this->size = $size;
 
         return $this;
+    }
+
+    public function isBlob()
+    {
+        return true;
     }
 }
