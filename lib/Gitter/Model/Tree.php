@@ -13,10 +13,9 @@ namespace Gitter\Model;
 
 use Gitter\Repository;
 
-class Tree extends AbstractModel implements \RecursiveIterator
+class Tree extends Object implements \RecursiveIterator
 {
     protected $mode;
-    protected $hash;
     protected $name;
     protected $data;
     protected $position = 0;
@@ -166,18 +165,6 @@ class Tree extends AbstractModel implements \RecursiveIterator
         return $this;
     }
 
-    public function getHash()
-    {
-        return $this->hash;
-    }
-
-    public function setHash($hash)
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
     public function getName()
     {
         return $this->name;
@@ -188,5 +175,10 @@ class Tree extends AbstractModel implements \RecursiveIterator
         $this->name = $name;
 
         return $this;
+    }
+
+    protected function isTree()
+    {
+        return true;
     }
 }

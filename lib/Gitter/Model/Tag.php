@@ -11,10 +11,9 @@
 
 namespace Gitter\Model;
 
-class Tag extends AbstractModel
+class Tag extends Object
 {
     protected $name;
-    protected $hash;
 
     public function getName()
     {
@@ -28,15 +27,8 @@ class Tag extends AbstractModel
         return $this;
     }
 
-    public function getHash()
+    protected function isTag()
     {
-        return $this->hash;
-    }
-
-    public function setHash($hash)
-    {
-        $this->hash = $hash;
-
-        return $this;
+        return true;
     }
 }
