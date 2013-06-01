@@ -39,10 +39,8 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('There are no write permissions in order to create test repositories.');
         }
 
-        $options = array(
-            'path' => getenv('GIT_CLIENT') ?: null,
-        );
-        $this->client = new Client($options);
+        $path = getenv('GIT_CLIENT') ?: null;
+        $this->client = new Client($path);
     }
 
     public function testIsCreatingRepositoryFixtures()
@@ -471,17 +469,6 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test file.txt', $diffs[0]->getFile(), 'New file name with a space in it');
         $this->assertEquals('testfile.txt', $diffs[1]->getFile(), 'Old file name');
 	}
-
-    public function testFindNestedRepos()
-    {
-        $nested_dir = self::$tmpdir . '/nested';
-        mkdir($nested_dir);
-        $this->client->createRepository($nested_dir . '/nestedrepo');
-        $all_repositories = $this->client->getRepositories(self::$tmpdir);
-        $nested_repositories = $this->client->getRepositories($nested_dir);
-        $this->assertCount(1, $nested_repositories, 'Only one nested repository');
-        $this->assertContains($nested_repositories[0], $all_repositories, 'Nested repository is found in all repositories');
-    }
 
     public static function tearDownAfterClass()
     {

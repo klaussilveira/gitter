@@ -37,19 +37,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('There are no write permissions in order to create test repositories.');
         }
 
-        $options = array(
-            'path' => getenv('GIT_CLIENT') ?: null,
-            'hidden' => array(self::$tmpdir . '/hiddenrepo'),
-        );
-        $this->client = new Client($options);
-    }
-
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testIsNotFindingRepositories()
-    {
-        $this->client->getRepositories(self::$tmpdir . '/testrepo');
+        $path = getenv('GIT_CLIENT') ?: null;
+        $this->client = new Client($path);
     }
 
     /**
@@ -58,14 +47,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testIsNotAbleToGetUnexistingRepository()
     {
         $this->client->getRepository(self::$tmpdir . '/testrepo');
-    }
-
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testIsNotAbleToGetUnexistingRepositories()
-    {
-        $this->client->getRepositories(self::$tmpdir);
     }
 
     public function testIsParsingGitVersion()
@@ -94,30 +75,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testIsNotAbleToCreateRepositoryDueToExistingOne()
     {
         $this->client->createRepository(self::$tmpdir . '/testrepo');
-    }
-
-    public function testIsListingRepositories()
-    {
-        $this->client->createRepository(self::$tmpdir . '/anothertestrepo');
-        $this->client->createRepository(self::$tmpdir . '/bigbadrepo');
-        $repositories = $this->client->getRepositories(self::$tmpdir);
-
-        $this->assertEquals($repositories[0]['name'], 'anothertestrepo');
-        $this->assertEquals($repositories[1]['name'], 'bigbadrepo');
-        $this->assertEquals($repositories[2]['name'], 'testbare');
-        $this->assertEquals($repositories[3]['name'], 'testrepo');
-    }
-
-    public function testIsNotListingHiddenRepositories()
-    {
-        $this->client->createRepository(self::$tmpdir . '/hiddenrepo');
-        $repositories = $this->client->getRepositories(self::$tmpdir);
-
-        $this->assertEquals($repositories[0]['name'], 'anothertestrepo');
-        $this->assertEquals($repositories[1]['name'], 'bigbadrepo');
-        $this->assertEquals($repositories[2]['name'], 'testbare');
-        $this->assertEquals($repositories[3]['name'], 'testrepo');
-        $this->assertFalse(isset($repositories[4]));
     }
 
     /**
