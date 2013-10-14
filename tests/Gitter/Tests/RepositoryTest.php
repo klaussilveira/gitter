@@ -436,6 +436,34 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testIsGettingCommitWithSpecifiedNumber()
+    {
+        $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
+        $commits = $repository->getCommits(null, 2);
+        $all_commits = $repository->getCommits();
+
+        $this->assertCount(2, $commits);
+        $this->assertGreaterThan(2, count($all_commits));
+    }
+
+    public function testIsGettingCommitWithSkip()
+    {
+        $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
+
+        $last_two_commits = $repository->getCommits(null, 2);
+        $last_two_commits_again = $repository->getCommits(null, 2, 0);
+
+        $first_two_commits = $repository->getCommits(null, 2, 2);
+
+        $this->assertEquals($last_two_commits[0], $last_two_commits_again[0]);
+        $this->assertEquals($last_two_commits[1], $last_two_commits_again[1]);
+
+        $this->assertNotEquals($last_two_commits[0], $first_two_commits[0]);
+        $this->assertNotEquals($last_two_commits[1], $first_two_commits[1]);
+        $this->assertNotEquals($last_two_commits[0], $first_two_commits[1]);
+        $this->assertNotEquals($last_two_commits[1], $first_two_commits[0]);
+    }
+
     public function testIsGettingCurrentHead()
     {
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
