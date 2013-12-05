@@ -169,9 +169,10 @@ class Repository
             return $branches;
         }
 
-        // Since we've stripped whitespace, the result "* (no branch)"
-        // that is displayed in detached HEAD state becomes "(nobranch)".
-        if ($branches[0] === "(nobranch)") {
+        // Since we've stripped whitespace, the result "* (detached from "
+        // and "* (no branch)" that is displayed in detached HEAD state
+        // becomes "(detachedfrom" and "(nobranch)" respectively.
+        if ((strpos($branches[0], '(detachedfrom') === 0) || ($branches[0] === '(nobranch)')) {
             $branches = array_slice($branches, 1);
         }
 
@@ -191,7 +192,7 @@ class Repository
 
         foreach ($branches as $branch) {
             if ($branch[0] === '*') {
-                if ($branch === '* (no branch)') {
+                if ((strpos($branch, '* (detached from ') === 0) || ($branch === '* (no branch)')) {
                     return NULL;
                 }
 
