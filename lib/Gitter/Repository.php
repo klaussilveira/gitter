@@ -407,8 +407,8 @@ class Repository
                 $lineNumOld++;
                 $lineNumNew++;
             }
-            
-            if ($diff) {
+
+            if (isset($diff)) {
                 $diff->addLine($log, $lineNumOld, $lineNumNew);
             }
         }
@@ -422,7 +422,7 @@ class Repository
 
     /**
      * Get the current HEAD.
-     * 
+     *
      * @param $default Optional branch to default to if in detached HEAD state.
      * If not passed, just grabs the first branch listed.
      * @return string the name of the HEAD branch, or a backup option if
