@@ -63,6 +63,15 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($repository->getConfig('user.email'), 'luke@rebel.org');
     }
 
+    public function testIsNamesCorrect()
+    {
+        $a = $this->client->createRepository(self::$tmpdir . '/reponame');
+        $b = $this->client->createRepository(self::$tmpdir . '/another-repo-name/');
+
+        $this->assertEquals("reponame", $a->getName());
+        $this->assertEquals("another-repo-name", $b->getName());
+    }
+
     public function testIsAdding()
     {
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');

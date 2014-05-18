@@ -155,6 +155,22 @@ class Repository
     }
 
     /**
+     * Get name of repository (top level directory)
+     *
+     * @return string
+     */
+    public function getName ()
+    {
+        $name = rtrim($this->path, '/');
+
+        if (strstr($name, '/')) {
+            $name = substr($name, strrpos($name, '/') + 1);
+        }
+
+        return trim($name);
+    }
+
+    /**
      * Show a list of the repository branches
      *
      * @return array List of branches
@@ -407,7 +423,7 @@ class Repository
                 $lineNumOld++;
                 $lineNumNew++;
             }
-            
+
             if ($diff) {
                 $diff->addLine($log, $lineNumOld, $lineNumNew);
             }
@@ -422,7 +438,7 @@ class Repository
 
     /**
      * Get the current HEAD.
-     * 
+     *
      * @param $default Optional branch to default to if in detached HEAD state.
      * If not passed, just grabs the first branch listed.
      * @return string the name of the HEAD branch, or a backup option if
