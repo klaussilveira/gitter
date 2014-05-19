@@ -19,7 +19,8 @@
     },
     "require-dev": {
         "symfony/filesystem": ">=2.2",
-        "phpunit/phpunit": ">=3.7.1"
+        "phpunit/phpunit": ">=3.7.1",
+        "mockery/mockery": "0.9.1"
     },
     "minimum-stability": "stable",
     "autoload": {
