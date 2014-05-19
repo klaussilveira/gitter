@@ -15,11 +15,13 @@ use Gitter\Model\Commit\Commit;
 use Gitter\Model\Tree;
 use Gitter\Model\Blob;
 use Gitter\Model\Commit\Diff;
+use Gitter\Statistics\StatisticsInterface;
 
 class Repository
 {
     protected $path;
     protected $client;
+    protected $statitics = array();
 
     public function __construct($path, Client $client)
     {
@@ -67,6 +69,33 @@ class Repository
         $this->getClient()->run($this, "config $key \"$value\"");
 
         return $this;
+    }
+
+    /**
+     * Add statistic aggregator
+     *
+     * @param StatisticsInterface|array $statitics
+     */
+    public function addStatistics ($statitics)
+    {
+        if (!is_array($statitics)) {
+            $statitics = array($statitics);
+        }
+
+        foreach ($statitics as $statistic) {
+            $className = get_class($statistic);
+            $this->statistics[strtolower($className)] = $statistic;
+        }
+    }
+
+    /**
+     * Get statistic aggregators
+     *
+     * @return array
+     */
+    public function getStatistics ()
+    {
+        return $this->statistics;
     }
 
     /**

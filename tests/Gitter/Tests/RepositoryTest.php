@@ -5,6 +5,7 @@ namespace Gitter\Tests;
 use Gitter\Client;
 use Gitter\Repository;
 use Gitter\Model\Symlink;
+use Gitter\Statitics\StatiticsInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class RepositoryTest extends \PHPUnit_Framework_TestCase
@@ -41,6 +42,11 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
         $path = getenv('GIT_CLIENT') ?: null;
         $this->client = new Client($path);
+    }
+
+    public function tearDown ()
+    {
+        \Mockery::close();
     }
 
     public function testIsCreatingRepositoryFixtures()
@@ -482,6 +488,20 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test file.txt', $diffs[0]->getFile(), 'New file name with a space in it');
         $this->assertEquals('testfile.txt', $diffs[1]->getFile(), 'Old file name');
 	}
+
+    public function testIsAddingSingleStatistics ()
+    {
+        $statisticsMock = \Mockery::mock('StatiticsInterface');
+
+        $repo = $this->client->createRepository(self::$tmpdir . '/teststatsrepo');
+        $repo->addStatistics($statisticsMock);
+
+        $this->assertEquals(
+            array(strtolower(get_class($statisticsMock)) => $statisticsMock),
+            $repo->getStatistics(),
+            'Failed to add single statistics'
+        );
+    }
 
     public static function tearDownAfterClass()
     {
