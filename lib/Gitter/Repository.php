@@ -95,6 +95,10 @@ class Repository
      */
     public function getStatistics ()
     {
+        foreach ($this->statistics as $statistic) {
+            $statistic->sortCommits();
+        }
+
         return $this->statistics;
     }
 

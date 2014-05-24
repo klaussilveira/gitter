@@ -6,4 +6,6 @@ use Gitter\Model\Commit\Commit;
 interface StatisticsInterface
 {
     public function addCommit (Commit $commit);
+
+    public function sortCommits ();
 }

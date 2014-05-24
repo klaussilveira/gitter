@@ -18,4 +18,9 @@ class Day extends Collection implements StatisticsInterface
 
         $this->items[$day][] = $commit;
     }
+
+    public function sortCommits()
+    {
+        ksort($this->items);
+    }
 }

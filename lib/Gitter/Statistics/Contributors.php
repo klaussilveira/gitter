@@ -21,7 +21,18 @@ class Contributors extends Collection implements StatisticsInterface
             $this->items[$email] = new Collection;
         }
 
-        $commits = $this->items[$email];
-        $commits->items[$commitDate][] = $commit;
+        $this->items[$email]->items[$commitDate][] = $commit;
+        ksort($this->items[$email]->items);
+    }
+
+    public function sortCommits()
+    {
+        uasort($this->items, function ($sortA, $sortB)  {
+            if (count($sortA) === count($sortB)) {
+                return 0;
+            }
+
+            return count($sortA) > count($sortB) ? -1 : 1;
+        });
     }
 }
