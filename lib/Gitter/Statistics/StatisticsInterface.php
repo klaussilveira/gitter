@@ -1,6 +1,9 @@
 <?php
-namespace Gitter\Statitics;
+namespace Gitter\Statistics;
+
+use Gitter\Model\Commit\Commit;
 
 interface StatisticsInterface
 {
+    public function addCommit (Commit $commit);
 }

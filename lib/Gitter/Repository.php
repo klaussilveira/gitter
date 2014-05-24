@@ -343,6 +343,10 @@ class Repository
             $commit = new Commit;
             $commit->importData($log);
             $commits[] = $commit;
+
+            foreach ($this->getStatistics() as $statistic) {
+                $statistic->addCommit($commit);
+            }
         }
 
         return $commits;
