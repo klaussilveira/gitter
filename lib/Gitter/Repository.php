@@ -21,12 +21,31 @@ class Repository
 {
     protected $path;
     protected $client;
+    protected $commitsHaveBeenParsed = false;
+
     protected $statistics = array();
 
     public function __construct($path, Client $client)
     {
         $this->setPath($path);
         $this->setClient($client);
+    }
+
+    /**
+     * @param  bool $value
+     * @return void
+     */
+    public function setCommitsHaveBeenParsed($value)
+    {
+        $this->commitsHaveBeenParsed = $value;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCommitsHaveBeenParsed()
+    {
+        return $this->commitsHaveBeenParsed;
     }
 
     /**
@@ -95,6 +114,10 @@ class Repository
      */
     public function getStatistics ()
     {
+        if ($this->getCommitsHaveBeenParsed() === false) {
+            $this->getCommits();
+        }
+
         foreach ($this->statistics as $statistic) {
             $statistic->sortCommits();
         }
@@ -348,10 +371,12 @@ class Repository
             $commit->importData($log);
             $commits[] = $commit;
 
-            foreach ($this->getStatistics() as $statistic) {
+            foreach ($this->statistics as $statistic) {
                 $statistic->addCommit($commit);
             }
         }
+
+        $this->setCommitsHaveBeenParsed(true);
 
         return $commits;
     }
