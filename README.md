@@ -54,3 +54,15 @@ Given a specific commit hash, you can find information about that commit:
 
     $commit = $repository->getCommit('920be98a05');
     print_r($commit);
+    
+### Getting statistics for repository
+
+Statistics aggregators can be added to the repository:
+
+    $repository->addStatistics(array(
+        new Gitter\Statistics\Contributors,
+        new Gitter\Statistics\Date,
+        new Gitter\Statistics\Day,
+        new Gitter\Statistics\Hour
+    ));
+    print_r($repository->getStatistics());
