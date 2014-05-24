@@ -21,7 +21,7 @@ class Repository
 {
     protected $path;
     protected $client;
-    protected $statitics = array();
+    protected $statistics = array();
 
     public function __construct($path, Client $client)
     {
@@ -74,17 +74,17 @@ class Repository
     /**
      * Add statistic aggregator
      *
-     * @param StatisticsInterface|array $statitics
+     * @param StatisticsInterface|array $statistics
      */
-    public function addStatistics ($statitics)
+    public function addStatistics ($statistics)
     {
-        if (!is_array($statitics)) {
-            $statitics = array($statitics);
+        if (!is_array($statistics)) {
+            $statistics = array($statistics);
         }
 
-        foreach ($statitics as $statistic) {
-            $className = get_class($statistic);
-            $this->statistics[strtolower($className)] = $statistic;
+        foreach ($statistics as $statistic) {
+            $reflect = new \ReflectionClass($statistic);
+            $this->statistics[strtolower($reflect->getShortName())] = $statistic;
         }
     }
 

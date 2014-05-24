@@ -491,7 +491,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAddingSingleStatistics ()
     {
-        $statisticsMock = \Mockery::mock('StatiticsInterface');
+        $statisticsMock = \Mockery::mock('Gitter\Statistics\StatiticsInterface');
 
         $repo = $this->client->createRepository(self::$tmpdir . '/teststatsrepo');
         $repo->addStatistics($statisticsMock);
