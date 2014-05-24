@@ -15,16 +15,37 @@ use Gitter\Model\Commit\Commit;
 use Gitter\Model\Tree;
 use Gitter\Model\Blob;
 use Gitter\Model\Commit\Diff;
+use Gitter\Statistics\StatisticsInterface;
 
 class Repository
 {
     protected $path;
     protected $client;
+    protected $commitsHaveBeenParsed = false;
+
+    protected $statistics = array();
 
     public function __construct($path, Client $client)
     {
         $this->setPath($path);
         $this->setClient($client);
+    }
+
+    /**
+     * @param  bool $value
+     * @return void
+     */
+    public function setCommitsHaveBeenParsed($value)
+    {
+        $this->commitsHaveBeenParsed = $value;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCommitsHaveBeenParsed()
+    {
+        return $this->commitsHaveBeenParsed;
     }
 
     /**
@@ -67,6 +88,41 @@ class Repository
         $this->getClient()->run($this, "config $key \"$value\"");
 
         return $this;
+    }
+
+    /**
+     * Add statistic aggregator
+     *
+     * @param StatisticsInterface|array $statistics
+     */
+    public function addStatistics ($statistics)
+    {
+        if (!is_array($statistics)) {
+            $statistics = array($statistics);
+        }
+
+        foreach ($statistics as $statistic) {
+            $reflect = new \ReflectionClass($statistic);
+            $this->statistics[strtolower($reflect->getShortName())] = $statistic;
+        }
+    }
+
+    /**
+     * Get statistic aggregators
+     *
+     * @return array
+     */
+    public function getStatistics ()
+    {
+        if ($this->getCommitsHaveBeenParsed() === false) {
+            $this->getCommits();
+        }
+
+        foreach ($this->statistics as $statistic) {
+            $statistic->sortCommits();
+        }
+
+        return $this->statistics;
     }
 
     /**
@@ -152,6 +208,22 @@ class Repository
         $this->getClient()->run($this, $command);
 
         return $this;
+    }
+
+    /**
+     * Get name of repository (top level directory)
+     *
+     * @return string
+     */
+    public function getName ()
+    {
+        $name = rtrim($this->path, '/');
+
+        if (strstr($name, '/')) {
+            $name = substr($name, strrpos($name, '/') + 1);
+        }
+
+        return trim($name);
     }
 
     /**
@@ -298,7 +370,13 @@ class Repository
             $commit = new Commit;
             $commit->importData($log);
             $commits[] = $commit;
+
+            foreach ($this->statistics as $statistic) {
+                $statistic->addCommit($commit);
+            }
         }
+
+        $this->setCommitsHaveBeenParsed(true);
 
         return $commits;
     }
@@ -407,7 +485,7 @@ class Repository
                 $lineNumOld++;
                 $lineNumNew++;
             }
-            
+
             if ($diff) {
                 $diff->addLine($log, $lineNumOld, $lineNumNew);
             }
@@ -422,7 +500,7 @@ class Repository
 
     /**
      * Get the current HEAD.
-     * 
+     *
      * @param $default Optional branch to default to if in detached HEAD state.
      * If not passed, just grabs the first branch listed.
      * @return string the name of the HEAD branch, or a backup option if
