@@ -17,6 +17,11 @@ class Contributors extends Collection implements StatisticsInterface
         $email      = $commit->getAuthor()->getEmail();
         $commitDate = $commit->getCommiterDate()->format('Y-m-d');
 
-        $this->items[$email][$commitDate][] = $commit;
+        if (!isset($this->items[$email])) {
+            $this->items[$email] = new Collection;
+        }
+
+        $commits = $this->items[$email];
+        $commits->items[$commitDate][] = $commit;
     }
 }
