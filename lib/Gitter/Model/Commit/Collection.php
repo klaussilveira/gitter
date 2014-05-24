@@ -1,8 +1,7 @@
 <?php
 namespace Gitter\Model\Commit;
 
-
-class Collection implements \ArrayAccess {
+class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
     /**
      * @var array
      */
@@ -58,5 +57,21 @@ class Collection implements \ArrayAccess {
     public function offsetUnset($offset)
     {
         unset($this->commits[$offset]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->commits);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->commits);
     }
 }
