@@ -1,26 +1,26 @@
 <?php
-namespace Gitter\Model\Commit;
+namespace Gitter\Util;
 
 class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
     /**
      * @var array
      */
-    protected $commits;
+    protected $items = array();
 
     /**
      * @return array
      */
-    public function getCommits()
+    public function getItems()
     {
-        return $this->commits;
+        return $this->items;
     }
 
     /**
-     * @param array $commits
+     * @param array $items
      */
-    public function setCommits($commits)
+    public function setItems($items)
     {
-        $this->commits = $commits;
+        $this->items = $items;
     }
 
     /**
@@ -28,7 +28,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
      */
     public function offsetExists($offset)
     {
-        return isset($this->commits[$offset]);
+        return isset($this->items[$offset]);
     }
 
     /**
@@ -36,7 +36,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
      */
     public function offsetGet($offset)
     {
-        return isset($this->commits[$offset]);
+        return isset($this->items[$offset]);
     }
 
     /**
@@ -45,9 +45,9 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
-            $this->commits[] = $value;
+            $this->items[] = $value;
         } else {
-            $this->commits[$offset] = $value;
+            $this->items[$offset] = $value;
         }
     }
 
@@ -56,7 +56,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
      */
     public function offsetUnset($offset)
     {
-        unset($this->commits[$offset]);
+        unset($this->items[$offset]);
     }
 
     /**
@@ -64,7 +64,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->commits);
+        return new \ArrayIterator($this->items);
     }
 
     /**
@@ -72,6 +72,6 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
      */
     public function count()
     {
-        return count($this->commits);
+        return count($this->items);
     }
 }

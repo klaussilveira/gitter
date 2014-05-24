@@ -1,7 +1,7 @@
 <?php
 namespace Gitter\Statistics;
 
-use Gitter\Model\Commit\Collection;
+use Gitter\Util\Collection;
 use Gitter\Model\Commit\Commit;
 
 /**
@@ -14,15 +14,9 @@ class Contributors extends Collection implements StatisticsInterface
      */
     public function addCommit(Commit $commit)
     {
-        $email = $commit->getAuthor()->getEmail();
-        $name  = $commit->getAuthor()->getName();
+        $email      = $commit->getAuthor()->getEmail();
+        $commitDate = $commit->getCommiterDate()->format('Y-m-d');
 
-        $commitDate  = $commit->getCommiterDate()->format('Y-m-d');
-
-        if (!isset($this->commits[$email]['name'])) {
-            $this->commits[$email]['name'] = $name;
-        }
-
-        $this->commits[$email]['commits'][$commitDate][] = $commit;
+        $this->items[$email][$commitDate][] = $commit;
     }
 }
