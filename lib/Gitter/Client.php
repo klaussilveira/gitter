@@ -13,6 +13,7 @@ namespace Gitter;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Process\ProcessUtils;
 
 class Client
 {
@@ -66,7 +67,7 @@ class Client
             $command = '-c "color.ui"=false ' . $command;
         }
 
-        $process = new Process($this->getPath() . ' ' . $command, $repository->getPath());
+        $process = new Process(ProcessUtils::escapeArgument($this->getPath()) . ' ' . $command, $repository->getPath());
         $process->setTimeout(180);
         $process->run();
 
@@ -79,7 +80,7 @@ class Client
 
     public function getVersion()
     {
-        $process = new Process($this->getPath() . ' --version');
+        $process = new Process(ProcessUtils::escapeArgument($this->getPath()) . ' --version');
         $process->run();
 
         if (!$process->isSuccessful()) {
