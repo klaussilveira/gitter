@@ -20,6 +20,8 @@ class Diff extends AbstractModel
     protected $old;
     protected $new;
     protected $file;
+    protected $fileNew;
+    protected $similarity;
 
     public function addLine($line, $oldNo, $newNo)
     {
@@ -69,5 +71,25 @@ class Diff extends AbstractModel
     public function getFile()
     {
         return $this->file;
+    }
+
+    public function setFileNew($fileNew)
+    {
+        $this->fileNew = $fileNew;
+    }
+
+    public function getFileNew()
+    {
+        return $this->fileNew;
+    }
+
+    public function setSimilarity($similarity)
+    {
+        $this->similarity = $similarity;
+    }
+
+    public function getSimilarity()
+    {
+        return $this->similarity;
     }
 }
