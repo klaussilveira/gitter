@@ -97,7 +97,7 @@ class Client
      */
     protected function getPath()
     {
-        return $this->path;
+        return escapeshellarg($this->path);
     }
 
     /**
