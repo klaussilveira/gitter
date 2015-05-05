@@ -28,8 +28,8 @@ class Tree extends Object implements \RecursiveIterator
 
     public function parse()
     {
-        $data = $this->getRepository()->getClient()->run($this->getRepository(), 'ls-tree -l ' . $this->getHash());
-        $lines = explode("\n", $data);
+        $data = $this->getRepository()->getClient()->run($this->getRepository(), 'ls-tree -lz ' . $this->getHash());
+        $lines = explode("\0", $data);
         $files = array();
         $root = array();
 
