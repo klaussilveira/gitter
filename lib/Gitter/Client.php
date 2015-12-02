@@ -79,6 +79,12 @@ class Client
 
     public function getVersion()
     {
+        static $version;
+
+        if (null !== $version) {
+            return $version;
+        }
+
         $process = new Process($this->getPath() . ' --version');
         $process->run();
 
@@ -86,8 +92,8 @@ class Client
             throw new \RuntimeException($process->getErrorOutput());
         }
 
-        $version = substr($process->getOutput(), 12);
-        return trim($version);
+        $version = trim(substr($process->getOutput(), 12));
+        return $version;
     }
 
     /**
