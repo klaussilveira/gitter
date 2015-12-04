@@ -233,6 +233,12 @@ class Repository
      */
     public function getBranches()
     {
+        static $branches;
+
+        if (null !== $branches) {
+            return $branches;
+        }
+
         $branches = $this->getClient()->run($this, "branch");
         $branches = explode("\n", $branches);
         $branches = array_filter(preg_replace('/[\*\s]/', '', $branches));
@@ -322,6 +328,12 @@ class Repository
      */
     public function getTags()
     {
+        static $tags = false;
+
+        if (false !== $tags) {
+            return $tags;
+        }
+
         $tags = $this->getClient()->run($this, "tag");
         $tags = explode("\n", $tags);
         array_pop($tags);
