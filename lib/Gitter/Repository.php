@@ -233,10 +233,10 @@ class Repository
      */
     public function getBranches()
     {
-        static $branches;
+        static $cache = array();
 
-        if (null !== $branches) {
-            return $branches;
+        if (array_key_exists($this->path, $cache)) {
+            return $cache[$this->path];
         }
 
         $branches = $this->getClient()->run($this, "branch");
@@ -244,7 +244,7 @@ class Repository
         $branches = array_filter(preg_replace('/[\*\s]/', '', $branches));
 
         if (empty($branches)) {
-            return $branches;
+            return $cache[$this->path] = $branches;
         }
 
         // Since we've stripped whitespace, the result "* (detached from "
@@ -254,7 +254,7 @@ class Repository
             $branches = array_slice($branches, 1);
         }
 
-        return $branches;
+        return $cache[$this->path] = $branches;
     }
 
     /**
@@ -328,10 +328,10 @@ class Repository
      */
     public function getTags()
     {
-        static $tags = false;
+        static $cache = array();
 
-        if (false !== $tags) {
-            return $tags;
+        if (array_key_exists($this->path, $cache)) {
+            return $cache[$this->path];
         }
 
         $tags = $this->getClient()->run($this, "tag");
@@ -339,10 +339,10 @@ class Repository
         array_pop($tags);
 
         if (empty($tags[0])) {
-            return NULL;
+            return $cache[$this->path] = NULL;
         }
 
-        return $tags;
+        return $cache[$this->path] = $tags;
     }
 
     /**
