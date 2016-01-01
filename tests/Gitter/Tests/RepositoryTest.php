@@ -147,8 +147,10 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
         $repository->commit("The truth unveiled\n\nThis is a proper commit body");
-        $this->assertRegExp("/The truth unveiled/", $repository->getClient()->run($repository, 'log'));
-        $this->assertRegExp("/This is a proper commit body/", $repository->getClient()->run($repository, 'log'));
+        $log = $repository->getClient()->run($repository, 'log');
+
+        $this->assertRegExp("/The truth unveiled/", $log);
+        $this->assertRegExp("/This is a proper commit body/", $log);
     }
 
     public function testIsCreatingBranches()
@@ -369,7 +371,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testIsGettingSymlinksWithinTrees()
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if ($this->isWindowsOS()) {
             $this->markTestSkipped('Unable to run on Windows');
         }
 
@@ -395,7 +397,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testIsGettingSymlinksWithinTreesOutput()
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if ($this->isWindowsOS()) {
             $this->markTestSkipped('Unable to run on Windows');
         }
 
@@ -421,8 +423,17 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testIsGettingTotalCommits()
     {
+        $commitsCount = '4';
+
+        if ($this->isWindowsOS()) {
+            // Commits from the following methods were not executed on Windows:
+            // * testIsGettingSymlinksWithinTrees
+            // * testIsGettingSymlinksWithinTreesOutput
+            $commitsCount = '2';
+        }
+
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
-        $this->assertEquals($repository->getTotalCommits(), '4');
+        $this->assertEquals($repository->getTotalCommits(), $commitsCount);
     }
 
     public function testIsGettingCommit()
@@ -468,6 +479,15 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
         $blame = $repository->getBlame('test_file4.txt');
         $this->assertEquals($blame[1]['line'], PHP_EOL . ' Your mother is so ugly, glCullFace always returns TRUE.');
+    }
+
+    public function testIsGettingBlameOnSymlink()
+    {
+        if ($this->isWindowsOS()) {
+            $this->markTestSkipped('Unable to run on Windows');
+        }
+
+        $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
         $this->assertEquals($repository->getBlame('original_file.txt'), array());
     }
 
@@ -508,6 +528,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         $fs = new Filesystem();
+        $fs->chmod(self::$tmpdir, 0777, 000, true);
         $fs->remove(self::$tmpdir);
     }
 
@@ -530,5 +551,16 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             '@@ -1 +0,0 @@',
             '-Modified line',
         );
+    }
+
+    private function isWindowsOS()
+    {
+        static $isWindows;
+
+        if ($isWindows === null) {
+            $isWindows = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        }
+
+        return $isWindows;
     }
 }

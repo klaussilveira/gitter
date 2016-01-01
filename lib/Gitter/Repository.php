@@ -160,7 +160,16 @@ class Repository
      */
     public function commit($message)
     {
-        $this->getClient()->run($this, "commit -m \"$message\"");
+        if (
+            strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
+            && strpos($message, "\n") !== -1
+        ) {
+            $command = 'commit -m "' . str_replace("\n", '" -m "', $message) . '"';
+        } else {
+            $command = "commit -m \"$message\"";
+        }
+
+        $this->getClient()->run($this, $command);
 
         return $this;
     }
@@ -217,7 +226,7 @@ class Repository
      */
     public function getName ()
     {
-        $name = rtrim($this->path, '/');
+        $name = rtrim(realpath($this->path), DIRECTORY_SEPARATOR);
 
         if (strstr($name, DIRECTORY_SEPARATOR)) {
             $name = substr($name, strrpos($name, DIRECTORY_SEPARATOR) + 1);
@@ -313,7 +322,7 @@ class Repository
         $command = "tag";
 
         if ($message) {
-            $command .= " -a -m '$message'";
+            $command .= " -a -m \"$message\"";
         }
 
         $command .= " $tag";
