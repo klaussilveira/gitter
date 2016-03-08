@@ -168,7 +168,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $repository->createTag('1.0.0');
         $repository->createTag('1.0.1', 'annotated tag');
         $tags = $repository->getTags();
-        $last= $repository->getLastTag();
+        $last = $repository->getLastTag();
         $this->assertContains('1.0.0', $tags);
         $this->assertContains('1.0.1', $tags);
         $this->assertEquals('1.0.1', $last);
