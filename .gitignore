@@ -4,3 +4,4 @@ vendor/
 .Spotlight-V100
 .Trashes
 .idea
+phpunit.xml
