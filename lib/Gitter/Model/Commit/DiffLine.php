@@ -25,6 +25,14 @@ class DiffLine extends Line
         if (!empty($data)) {
             switch ($data[0]) {
                 case '@':
+                case '\\':
+                case 'B':
+                case 'c':
+                case 'd':
+                case 'n':
+                case 'o':
+                case 'r':
+                case 's':
                     $this->numOld = '...';
                     $this->numNew = '...';
                     break;

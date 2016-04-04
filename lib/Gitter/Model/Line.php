@@ -19,16 +19,25 @@ class Line extends AbstractModel
     public function __construct($data)
     {
         if (!empty($data)) {
-            if ($data[0] == '@') {
-                $this->setType('chunk');
-            }
-
-            if ($data[0] == '-') {
-                $this->setType('old');
-            }
-
-            if ($data[0] == '+') {
-                $this->setType('new');
+            switch ($data[0]) {
+                case '@':
+                    $this->setType('chunk');
+                    break;
+                case '-':
+                    $this->setType('old');
+                    break;
+                case '+':
+                    $this->setType('new');
+                    break;
+                case '\\': // No newline
+                case 'B': // Binary
+                case 'c': // copy to/from
+                case 'd': // deleted mode, dissimilarity
+                case 'n': // new mode
+                case 'o': // old mode
+                case 'r': // rename to/from
+                case 's': // similarity
+                    $this->setType('info');
             }
         }
 
