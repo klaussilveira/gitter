@@ -16,9 +16,23 @@ use Symfony\Component\Process\ExecutableFinder;
 
 class Client
 {
+    const DEFAULT_PROCESS_TIMEOUT = 180;
+
     protected $path;
 
-    public function __construct($path = null)
+    /**
+     * process timeout in seconds
+     *
+     * @var int
+     */
+    protected $processTimeout;
+
+    /**
+     * Client constructor.
+     * @param null $path
+     * @param int $processTimeout
+     */
+    public function __construct($path = null, $processTimeout = self::DEFAULT_PROCESS_TIMEOUT)
     {
         if (!$path) {
             $finder = new ExecutableFinder();
@@ -26,12 +40,13 @@ class Client
         }
 
         $this->setPath($path);
+        $this->setProcessTimeout($processTimeout);
     }
 
     /**
      * Creates a new repository on the specified path
      *
-     * @param  string     $path Path where the new repository will be created
+     * @param  string $path Path where the new repository will be created
      * @return Repository Instance of Repository
      */
     public function createRepository($path, $bare = null)
@@ -48,7 +63,7 @@ class Client
     /**
      * Opens a repository at the specified path
      *
-     * @param  string     $path Path where the repository is located
+     * @param  string $path Path where the repository is located
      * @return Repository Instance of Repository
      */
     public function getRepository($path)
@@ -67,7 +82,7 @@ class Client
         }
 
         $process = new Process($this->getPath() . ' ' . $command, $repository->getPath());
-        $process->setTimeout(180);
+        $process->setTimeout($this->getProcessTimeout());
         $process->run();
 
         if (!$process->isSuccessful()) {
@@ -116,5 +131,27 @@ class Client
         $this->path = $path;
 
         return $this;
+    }
+
+    /**
+     * Set git process timeout
+     *
+     * @param int $processTimeout
+     * @return Client
+     */
+    public function setProcessTimeout($processTimeout)
+    {
+        $this->processTimeout = $processTimeout;
+
+        return $this;
+    }
+
+    /**
+     * Get current timeout
+     * @return int
+     */
+    public function getProcessTimeout()
+    {
+        return $this->processTimeout;
     }
 }
