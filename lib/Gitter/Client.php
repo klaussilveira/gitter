@@ -27,11 +27,6 @@ class Client
      */
     protected $processTimeout;
 
-    /**
-     * Client constructor.
-     * @param null $path
-     * @param int $processTimeout
-     */
     public function __construct($path = null, $processTimeout = self::DEFAULT_PROCESS_TIMEOUT)
     {
         if (!$path) {
