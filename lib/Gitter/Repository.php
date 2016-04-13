@@ -366,11 +366,22 @@ class Repository
     /**
      * Show the repository commit log
      *
+     * @param string $file The filename of a specific file to show commits for, or null to show all commits from all files
+     * @param int $num Restrict the commits to the specified number. Set it to -1 (default) to show all commits
+     * @param int $skip Skip the specified number of commits before including $num commits
      * @return array Commit log
      */
-    public function getCommits($file = null)
+    public function getCommits($file = null, $num = -1, $skip = 0)
     {
-        $command = "log --pretty=format:\"<item><hash>%H</hash><short_hash>%h</short_hash><tree>%T</tree><parents>%P</parents><author>%an</author><author_email>%ae</author_email><date>%at</date><commiter>%cn</commiter><commiter_email>%ce</commiter_email><commiter_date>%ct</commiter_date><message><![CDATA[%s]]></message></item>\"";
+        $extra = "";
+        if ($num > 0) {
+            $extra = " --max-count=$num ";
+        }
+        if ($skip > 0) {
+            $extra = "$extra --skip=$skip ";
+        }
+
+        $command = "log $extra --pretty=format:\"<item><hash>%H</hash><short_hash>%h</short_hash><tree>%T</tree><parents>%P</parents><author>%an</author><author_email>%ae</author_email><date>%at</date><commiter>%cn</commiter><commiter_email>%ce</commiter_email><commiter_date>%ct</commiter_date><message><![CDATA[%s]]></message></item>\"";
 
         if ($file) {
             $command .= " $file";
