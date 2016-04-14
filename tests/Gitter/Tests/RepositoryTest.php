@@ -176,13 +176,13 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
         $branch = $repository->getCurrentBranch();
-        $this->assertTrue($branch === 'master');
+        $this->assertEquals('master', $branch);
 
         $commits = $repository->getCommits();
         $hash = $commits[0]->getHash();
         $repository->checkout($hash);
         $new_branch = $repository->getCurrentBranch();
-        $this->assertTrue($new_branch === NULL);
+        $this->assertNull($new_branch);
 
         $repository->checkout($branch);
     }
@@ -195,7 +195,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $hash = $commits[0]->getHash();
         $repository->checkout($hash);
         $branches = $repository->getBranches();
-        $this->assertTrue(count($branches) === 3);
+        $this->assertEquals(3, count($branches), print_r($branches, true));
 
         $branch = $repository->getHead('develop');
         $repository->checkout($current_branch);
