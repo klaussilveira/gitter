@@ -445,14 +445,23 @@ class Repository
                 }
 
                 $diff = new Diff;
-                if (preg_match('/^diff --[\S]+ a\/?(.+) b\/?/', $log, $name)) {
+                if (preg_match('/^diff --[\S]+ a\/?(.+) b\/?(.+)/', $log, $name)) {
                     $diff->setFile($name[1]);
+
+                    if ($name[1] != $name[2]) {
+                        $diff->setFileNew($name[2]);
+                    }
                 }
                 continue;
             }
 
             if ('index' === substr($log, 0, 5)) {
                 $diff->setIndex($log);
+                continue;
+            }
+
+            if ('similarity' === substr($log, 0, 10)) {
+                $diff->setSimilarity(substr($log, 17));
                 continue;
             }
 

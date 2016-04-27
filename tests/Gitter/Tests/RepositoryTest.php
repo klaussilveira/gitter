@@ -489,6 +489,17 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('testfile.txt', $diffs[1]->getFile(), 'Old file name');
 	}
 
+    public function testCommitWithRenamedFile()
+    {
+        $repo = $this->client->createRepository(self::$tmpdir . '/renametest');
+        $repo->setConfig('diff.renames', 'true');
+        $diff = $repo->readDiffLogs($this->getLogsForRenamedFile());
+
+        $this->assertEquals('hello.txt', $diff[0]->getFile(), 'Old file name');
+        $this->assertEquals('subfolder/hello.txt', $diff[0]->getFileNew(), 'New file name');
+        $this->assertEquals('72%', $diff[0]->getSimilarity(), 'Similarity index');
+    }
+
     public function testIsAddingSingleStatistics ()
     {
         $statisticsMock = \Mockery::mock('Gitter\Statistics\StatiticsInterface');
@@ -529,6 +540,27 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             '+++ /dev/null',
             '@@ -1 +0,0 @@',
             '-Modified line',
+        );
+    }
+
+    private function getLogsForRenamedFile()
+    {
+        // 'hello.txt' is modified and moved to 'subfolder'
+        return array(
+            'diff --git a/hello.txt b/subfolder/hello.txt',
+            'similarity index 72%',
+            'rename from hello.txt',
+            'rename to subfolder/hello.txt',
+            'index 7d19c3d..f3851cc 100644',
+            '--- a/hello.txt',
+            '+++ b/subfolder/hello.txt',
+            '@@ -1,5 +1,5 @@',
+            ' Hello world!',
+            ' Hello world!',
+            ' Hello world!',
+            '-Hello world!',
+            '+Goodbye world!',
+            ' Hello world!'
         );
     }
 }
