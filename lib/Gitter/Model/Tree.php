@@ -125,7 +125,7 @@ class Tree extends Object implements \RecursiveIterator
 
     public function hasChildren()
     {
-        return is_array($this->data[$this->position]);
+        return !empty($this->data);
     }
 
     public function next()
