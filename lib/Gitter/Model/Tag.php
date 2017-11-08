@@ -11,7 +11,7 @@
 
 namespace Gitter\Model;
 
-class Tag extends Object
+class Tag extends Thing
 {
     protected $name;
 
