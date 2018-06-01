@@ -686,6 +686,6 @@ class Repository
         $output = $this->getClient()->run($this, $command);
         $format = new PrettyFormat();
 
-        return $format->parse($output);
+        return $format->parse(mb_convert_encoding($output,'UTF-8'));
     }
 }
