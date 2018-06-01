@@ -345,6 +345,15 @@ class Repository
         return $cache[$this->path] = $tags;
     }
 
+    public function getLastTag()
+    {
+        $command = "describe --abbrev=0 --tags";
+
+        $tag = $this->getClient()->run($this, $command);
+
+        return trim($tag);
+    }
+
     /**
      * Show the amount of commits on the repository.
      *
