@@ -3,8 +3,9 @@
 namespace Gitter\Tests;
 
 use Gitter\PrettyFormat;
+use PHPUnit\Framework\TestCase;
 
-class PrettyFormatTest extends \PHPUnit_Framework_TestCase
+class PrettyFormatTest extends TestCase
 {
     /**
      * @dataProvider dataForTestIsParsingPrettyXMLFormat

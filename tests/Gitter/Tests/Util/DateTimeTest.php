@@ -3,8 +3,9 @@
 namespace Gitter\Tests\Util;
 
 use Gitter\Util\DateTime;
+use PHPUnit\Framework\TestCase;
 
-class DateTimeTest extends \PHPUnit_Framework_TestCase
+class DateTimeTest extends TestCase
 {
     public function testIsCreatingDateObject()
     {

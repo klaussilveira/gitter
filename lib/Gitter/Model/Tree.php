@@ -13,7 +13,7 @@ namespace Gitter\Model;
 
 use Gitter\Repository;
 
-class Tree extends Object implements \RecursiveIterator
+class Tree extends GitObject implements \RecursiveIterator
 {
     protected $mode;
     protected $name;

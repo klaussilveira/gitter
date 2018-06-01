@@ -11,10 +11,10 @@
 
 namespace Gitter\Model\Commit;
 
-use Gitter\Model\Object;
+use Gitter\Model\GitObject;
 use Gitter\Util\DateTime;
 
-class Commit extends Object
+class Commit extends GitObject
 {
     protected $shortHash;
     protected $treeHash;
@@ -149,7 +149,7 @@ class Commit extends Object
     {
         return $this->body;
     }
-    
+
     public function setBody($body)
     {
         $this->body = $body;

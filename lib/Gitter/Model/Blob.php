@@ -13,7 +13,7 @@ namespace Gitter\Model;
 
 use Gitter\Repository;
 
-class Blob extends Object
+class Blob extends GitObject
 {
     protected $mode;
     protected $name;

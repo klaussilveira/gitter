@@ -7,8 +7,9 @@ use Gitter\Repository;
 use Gitter\Model\Symlink;
 use Gitter\Statitics\StatiticsInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use PHPUnit\Framework\TestCase;
 
-class RepositoryTest extends \PHPUnit_Framework_TestCase
+class RepositoryTest extends TestCase
 {
     protected static $tmpdir;
 
@@ -181,8 +182,8 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $commits = $repository->getCommits();
         $hash = $commits[0]->getHash();
         $repository->checkout($hash);
-        $new_branch = $repository->getCurrentBranch();
-        $this->assertTrue($new_branch === NULL);
+        $newBranch = $repository->getCurrentBranch();
+        $this->assertTrue($newBranch === NULL);
 
         $repository->checkout($branch);
     }
@@ -493,7 +494,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $statisticsMock = \Mockery::mock('Gitter\Statistics\StatiticsInterface');
         $statisticsMock->shouldReceive('sortCommits')->once();
-        
+
         $repo = $this->client->createRepository(self::$tmpdir . '/teststatsrepo');
         $repo->addStatistics($statisticsMock);
         $repo->setCommitsHaveBeenParsed(true);

@@ -5,8 +5,9 @@ namespace Gitter\Tests\Model\Commit;
 use Gitter\Model\Commit\Commit;
 use Gitter\PrettyFormat;
 use Gitter\Util\DateTime;
+use PHPUnit\Framework\TestCase;
 
-class CommitTest extends \PHPUnit_Framework_TestCase
+class CommitTest extends TestCase
 {
     public function testImportData()
     {

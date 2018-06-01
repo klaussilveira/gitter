@@ -5,8 +5,9 @@ namespace Gitter\Tests;
 use Gitter\Client;
 use Gitter\Repository;
 use Symfony\Component\Filesystem\Filesystem;
+use PHPUnit\Framework\TestCase;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
     public static $tmpdir;
     protected $client;

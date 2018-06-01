@@ -11,7 +11,7 @@
 
 namespace Gitter\Model;
 
-class Object extends AbstractModel
+class GitObject extends AbstractModel
 {
     protected $hash;
 
