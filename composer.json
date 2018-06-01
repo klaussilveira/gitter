@@ -15,6 +15,10 @@
     ],
     "require": {
         "php": ">=5.3",
+        "doctrine/instantiator": "1.0.*",
+        "phpdocumentor/reflection-docblock": "2.0.*",
+        "sebastian/comparator": "1.2.*",
+        "sebastian/recursion-context": "1.0.*",
         "symfony/process": "2.8.*"
     },
     "require-dev": {
