@@ -43,14 +43,14 @@ class Tree extends GitObject implements \RecursiveIterator
         }
 
         foreach ($files as $file) {
-            if ($file[1] == 'commit') {
+            if ('commit' == $file[1]) {
                 // submodule
                 continue;
             }
 
-            if ($file[0] == '120000') {
+            if ('120000' == $file[0]) {
                 $show = $this->getRepository()->getClient()->run($this->getRepository(), 'show ' . $file[2]);
-                $tree = new Symlink;
+                $tree = new Symlink();
                 $tree->setMode($file[0]);
                 $tree->setName($file[4]);
                 $tree->setPath($show);
@@ -58,7 +58,7 @@ class Tree extends GitObject implements \RecursiveIterator
                 continue;
             }
 
-            if ($file[1] == 'blob') {
+            if ('blob' == $file[1]) {
                 $blob = new Blob($file[2], $this->getRepository());
                 $blob->setMode($file[0]);
                 $blob->setName($file[4]);

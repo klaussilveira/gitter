@@ -3,11 +3,9 @@
 namespace Gitter\Tests;
 
 use Gitter\Client;
-use Gitter\Repository;
 use Gitter\Model\Symlink;
-use Gitter\Statitics\StatiticsInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 class RepositoryTest extends TestCase
 {
@@ -22,7 +20,7 @@ class RepositoryTest extends TestCase
         } elseif (getenv('TMPDIR')) {
             self::$tmpdir = getenv('TMPDIR');
         } else {
-           self::$tmpdir = '/tmp';
+            self::$tmpdir = '/tmp';
         }
 
         self::$tmpdir .= '/gitlist_' . md5(time() . mt_rand());
@@ -35,6 +33,12 @@ class RepositoryTest extends TestCase
         }
     }
 
+    public static function tearDownAfterClass()
+    {
+        $fs = new Filesystem();
+        $fs->remove(self::$tmpdir);
+    }
+
     public function setUp()
     {
         if (!is_writable(self::$tmpdir)) {
@@ -45,7 +49,7 @@ class RepositoryTest extends TestCase
         $this->client = new Client($path);
     }
 
-    public function tearDown ()
+    public function tearDown()
     {
         \Mockery::close();
     }
@@ -55,9 +59,9 @@ class RepositoryTest extends TestCase
         $a = $this->client->createRepository(self::$tmpdir . '/testrepo');
         $b = $this->client->createRepository(self::$tmpdir . '/anothertestrepo');
         $c = $this->client->createRepository(self::$tmpdir . '/bigbadrepo');
-        $this->assertRegExp("/nothing to commit/", $a->getClient()->run($a, 'status'));
-        $this->assertRegExp("/nothing to commit/", $b->getClient()->run($b, 'status'));
-        $this->assertRegExp("/nothing to commit/", $c->getClient()->run($c, 'status'));
+        $this->assertRegExp('/nothing to commit/', $a->getClient()->run($a, 'status'));
+        $this->assertRegExp('/nothing to commit/', $b->getClient()->run($b, 'status'));
+        $this->assertRegExp('/nothing to commit/', $c->getClient()->run($c, 'status'));
     }
 
     public function testIsConfiguratingRepository()
@@ -75,8 +79,8 @@ class RepositoryTest extends TestCase
         $a = $this->client->createRepository(self::$tmpdir . '/reponame');
         $b = $this->client->createRepository(self::$tmpdir . '/another-repo-name/');
 
-        $this->assertEquals("reponame", $a->getName());
-        $this->assertEquals("another-repo-name", $b->getName());
+        $this->assertEquals('reponame', $a->getName());
+        $this->assertEquals('another-repo-name', $b->getName());
     }
 
     public function testIsAdding()
@@ -84,7 +88,7 @@ class RepositoryTest extends TestCase
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
         file_put_contents(self::$tmpdir . '/testrepo/test_file.txt', 'Your mother is so ugly, glCullFace always returns TRUE.');
         $repository->add('test_file.txt');
-        $this->assertRegExp("/new file:   test_file.txt/", $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file.txt/', $repository->getClient()->run($repository, 'status'));
     }
 
     /**
@@ -100,9 +104,9 @@ class RepositoryTest extends TestCase
 
         $repository->add();
 
-        $this->assertRegExp("/new file:   test_file1.txt/", $repository->getClient()->run($repository, 'status'));
-        $this->assertRegExp("/new file:   test_file2.txt/", $repository->getClient()->run($repository, 'status'));
-        $this->assertRegExp("/new file:   test_file3.txt/", $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file1.txt/', $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file2.txt/', $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file3.txt/', $repository->getClient()->run($repository, 'status'));
     }
 
     /**
@@ -118,9 +122,9 @@ class RepositoryTest extends TestCase
 
         $repository->addAll();
 
-        $this->assertRegExp("/new file:   test_file4.txt/", $repository->getClient()->run($repository, 'status'));
-        $this->assertRegExp("/new file:   test_file5.txt/", $repository->getClient()->run($repository, 'status'));
-        $this->assertRegExp("/new file:   test_file6.txt/", $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file4.txt/', $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file5.txt/', $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file6.txt/', $repository->getClient()->run($repository, 'status'));
     }
 
     /**
@@ -136,9 +140,9 @@ class RepositoryTest extends TestCase
 
         $repository->add(array('test_file7.txt', 'test_file8.txt', 'test_file9.txt'));
 
-        $this->assertRegExp("/new file:   test_file7.txt/", $repository->getClient()->run($repository, 'status'));
-        $this->assertRegExp("/new file:   test_file8.txt/", $repository->getClient()->run($repository, 'status'));
-        $this->assertRegExp("/new file:   test_file9.txt/", $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file7.txt/', $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file8.txt/', $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test_file9.txt/', $repository->getClient()->run($repository, 'status'));
     }
 
     /**
@@ -148,8 +152,8 @@ class RepositoryTest extends TestCase
     {
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
         $repository->commit("The truth unveiled\n\nThis is a proper commit body");
-        $this->assertRegExp("/The truth unveiled/", $repository->getClient()->run($repository, 'log'));
-        $this->assertRegExp("/This is a proper commit body/", $repository->getClient()->run($repository, 'log'));
+        $this->assertRegExp('/The truth unveiled/', $repository->getClient()->run($repository, 'log'));
+        $this->assertRegExp('/This is a proper commit body/', $repository->getClient()->run($repository, 'log'));
     }
 
     public function testIsCreatingBranches()
@@ -177,13 +181,13 @@ class RepositoryTest extends TestCase
     {
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
         $branch = $repository->getCurrentBranch();
-        $this->assertTrue($branch === 'master');
+        $this->assertTrue('master' === $branch);
 
         $commits = $repository->getCommits();
         $hash = $commits[0]->getHash();
         $repository->checkout($hash);
         $newBranch = $repository->getCurrentBranch();
-        $this->assertTrue($newBranch === NULL);
+        $this->assertTrue(null === $newBranch);
 
         $repository->checkout($branch);
     }
@@ -196,7 +200,7 @@ class RepositoryTest extends TestCase
         $hash = $commits[0]->getHash();
         $repository->checkout($hash);
         $branches = $repository->getBranches();
-        $this->assertTrue(count($branches) === 3);
+        $this->assertTrue(3 === count($branches));
 
         $branch = $repository->getHead('develop');
         $repository->checkout($current_branch);
@@ -213,10 +217,10 @@ class RepositoryTest extends TestCase
         $repository = $this->client->getRepository(self::$tmpdir . '/testrepo');
         $branch = $repository->checkout('issue12');
         $branch = $repository->getCurrentBranch();
-        $this->assertTrue($branch === 'issue12');
+        $this->assertTrue('issue12' === $branch);
         $repository->checkout('master');
         $branch = $repository->getCurrentBranch();
-        $this->assertTrue($branch === 'master');
+        $this->assertTrue('master' === $branch);
     }
 
     /**
@@ -256,7 +260,7 @@ class RepositoryTest extends TestCase
         foreach ($commits as $commit) {
             $this->assertTrue($commit->isCommit());
             $this->assertInstanceOf('Gitter\Model\Commit\Commit', $commit);
-            $this->assertEquals($commit->getMessage(), "The truth unveiled");
+            $this->assertEquals($commit->getMessage(), 'The truth unveiled');
             $this->assertInstanceOf('Gitter\Model\Commit\Author', $commit->getAuthor());
             $this->assertEquals($commit->getAuthor()->getName(), 'Luke Skywalker');
             $this->assertEquals($commit->getAuthor()->getEmail(), 'luke@rebel.org');
@@ -310,7 +314,7 @@ class RepositoryTest extends TestCase
 
         // Adding and commiting
         $repository->addAll();
-        $repository->commit("Creating folders for testIsGettingTreesWithinTrees");
+        $repository->commit('Creating folders for testIsGettingTreesWithinTrees');
 
         // Checking tree
         $files = $repository->getTree('master')->output();
@@ -370,7 +374,7 @@ class RepositoryTest extends TestCase
 
     public function testIsGettingSymlinksWithinTrees()
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
             $this->markTestSkipped('Unable to run on Windows');
         }
 
@@ -379,7 +383,7 @@ class RepositoryTest extends TestCase
         $fs->touch(self::$tmpdir . '/testrepo/original_file.txt');
         $fs->symlink(self::$tmpdir . '/testrepo/original_file.txt', self::$tmpdir . '/testrepo/link.txt');
         $repository->addAll();
-        $repository->commit("Testing symlinks");
+        $repository->commit('Testing symlinks');
         $files = $repository->getTree('master');
 
         foreach ($files as $file) {
@@ -387,6 +391,7 @@ class RepositoryTest extends TestCase
                 $this->assertEquals($file->getPath(), self::$tmpdir . '/testrepo/original_file.txt');
                 $this->assertEquals($file->getName(), 'link.txt');
                 $this->assertEquals($file->getMode(), '120000');
+
                 return;
             }
         }
@@ -396,7 +401,7 @@ class RepositoryTest extends TestCase
 
     public function testIsGettingSymlinksWithinTreesOutput()
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
             $this->markTestSkipped('Unable to run on Windows');
         }
 
@@ -405,14 +410,15 @@ class RepositoryTest extends TestCase
         $fs->touch(self::$tmpdir . '/testrepo/original_file.txt');
         $fs->symlink(self::$tmpdir . '/testrepo/original_file.txt', self::$tmpdir . '/testrepo/link2.txt');
         $repository->addAll();
-        $repository->commit("Testing symlinks");
+        $repository->commit('Testing symlinks');
         $files = $repository->getTree('master')->output();
 
         foreach ($files as $file) {
-            if ($file['type'] == 'symlink') {
+            if ('symlink' == $file['type']) {
                 $this->assertEquals($file['path'], self::$tmpdir . '/testrepo/original_file.txt');
                 $this->assertEquals($file['name'], 'link.txt');
                 $this->assertEquals($file['mode'], '120000');
+
                 return;
             }
         }
@@ -446,7 +452,7 @@ class RepositoryTest extends TestCase
             $this->assertRegExp('/[a-f0-9]+/', $singleCommit->getShortHash());
             $this->assertRegExp('/[a-f0-9]+/', $singleCommit->getTreeHash());
 
-            if ($singleCommit->getMessage() == 'The truth unveiled') {
+            if ('The truth unveiled' == $singleCommit->getMessage()) {
                 $this->assertEquals($singleCommit->getBody(), 'This is a proper commit body');
             }
         }
@@ -478,7 +484,7 @@ class RepositoryTest extends TestCase
         file_put_contents(self::$tmpdir . '/testrepo/test file10.txt', 'Your mother is so ugly, glCullFace always returns TRUE.');
         $repository->add('test file10.txt');
 
-        $this->assertRegExp("/new file:   test file10.txt/", $repository->getClient()->run($repository, 'status'));
+        $this->assertRegExp('/new file:   test file10.txt/', $repository->getClient()->run($repository, 'status'));
     }
 
     public function testCommitWithFileNameWithSpace()
@@ -488,9 +494,9 @@ class RepositoryTest extends TestCase
 
         $this->assertEquals('test file.txt', $diffs[0]->getFile(), 'New file name with a space in it');
         $this->assertEquals('testfile.txt', $diffs[1]->getFile(), 'Old file name');
-	}
+    }
 
-    public function testIsAddingSingleStatistics ()
+    public function testIsAddingSingleStatistics()
     {
         $statisticsMock = \Mockery::mock('Gitter\Statistics\StatiticsInterface');
         $statisticsMock->shouldReceive('sortCommits')->once();
@@ -504,12 +510,6 @@ class RepositoryTest extends TestCase
             $repo->getStatistics(),
             'Failed to add single statistics'
         );
-    }
-
-    public static function tearDownAfterClass()
-    {
-        $fs = new Filesystem();
-        $fs->remove(self::$tmpdir);
     }
 
     private function getLogsForCommitWithFileNameWithSpace()

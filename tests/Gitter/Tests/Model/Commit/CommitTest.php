@@ -3,7 +3,6 @@
 namespace Gitter\Tests\Model\Commit;
 
 use Gitter\Model\Commit\Commit;
-use Gitter\PrettyFormat;
 use Gitter\Util\DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -11,7 +10,7 @@ class CommitTest extends TestCase
 {
     public function testImportData()
     {
-        $data = array (
+        $data = array(
             'hash' => '209908f247194b1adc836f2e50f957cb1f11f41c',
             'short_hash' => '209908f',
             'tree' => '0a1f6638ccfc6d6b34be8a913144304355d23cc3',
@@ -23,7 +22,7 @@ class CommitTest extends TestCase
             'commiter_email' => 'commiter@example.com',
             'commiter_date' => '1347372763',
             'message' => 'Test commit',
-            'body' => 'Test body'
+            'body' => 'Test body',
         );
         $commit = new Commit();
         $commit->importData($data);

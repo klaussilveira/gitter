@@ -1,11 +1,12 @@
 <?php
+
 namespace Gitter\Statistics;
 
-use Gitter\Util\Collection;
 use Gitter\Model\Commit\Commit;
+use Gitter\Util\Collection;
 
 /**
- * Aggregate statistics based on day
+ * Aggregate statistics based on day.
  */
 class Day extends Collection implements StatisticsInterface
 {

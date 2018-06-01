@@ -65,6 +65,7 @@ class Commit extends GitObject
     public function setShortHash($shortHash)
     {
         $this->shortHash = $shortHash;
+
         return $this;
     }
 
@@ -76,6 +77,7 @@ class Commit extends GitObject
     public function setTreeHash($treeHash)
     {
         $this->treeHash = $treeHash;
+
         return $this;
     }
 
@@ -87,6 +89,7 @@ class Commit extends GitObject
     public function setParentsHash($parentsHash)
     {
         $this->parentsHash = $parentsHash;
+
         return $this;
     }
 
@@ -98,6 +101,7 @@ class Commit extends GitObject
     public function setAuthor($author)
     {
         $this->author = $author;
+
         return $this;
     }
 
@@ -109,6 +113,7 @@ class Commit extends GitObject
     public function setDate($date)
     {
         $this->date = $date;
+
         return $this;
     }
 
@@ -120,6 +125,7 @@ class Commit extends GitObject
     public function setCommiter($commiter)
     {
         $this->commiter = $commiter;
+
         return $this;
     }
 
@@ -131,6 +137,7 @@ class Commit extends GitObject
     public function setCommiterDate($commiterDate)
     {
         $this->commiterDate = $commiterDate;
+
         return $this;
     }
 
@@ -142,6 +149,7 @@ class Commit extends GitObject
     public function setMessage($message)
     {
         $this->message = $message;
+
         return $this;
     }
 
@@ -153,6 +161,7 @@ class Commit extends GitObject
     public function setBody($body)
     {
         $this->body = $body;
+
         return $this;
     }
 
@@ -164,6 +173,7 @@ class Commit extends GitObject
     public function setDiffs($diffs)
     {
         $this->diffs = $diffs;
+
         return $this;
     }
 

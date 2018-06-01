@@ -1,11 +1,12 @@
 <?php
+
 namespace Gitter\Statistics;
 
-use Gitter\Util\Collection;
 use Gitter\Model\Commit\Commit;
+use Gitter\Util\Collection;
 
 /**
- * Aggregate statistics based on contributor
+ * Aggregate statistics based on contributor.
  */
 class Contributors extends Collection implements StatisticsInterface
 {
@@ -14,11 +15,11 @@ class Contributors extends Collection implements StatisticsInterface
      */
     public function addCommit(Commit $commit)
     {
-        $email      = $commit->getAuthor()->getEmail();
+        $email = $commit->getAuthor()->getEmail();
         $commitDate = $commit->getCommiterDate()->format('Y-m-d');
 
         if (!isset($this->items[$email])) {
-            $this->items[$email] = new Collection;
+            $this->items[$email] = new Collection();
         }
 
         $this->items[$email]->items[$commitDate][] = $commit;
@@ -27,7 +28,7 @@ class Contributors extends Collection implements StatisticsInterface
 
     public function sortCommits()
     {
-        uasort($this->items, function ($sortA, $sortB)  {
+        uasort($this->items, function ($sortA, $sortB) {
             if (count($sortA) === count($sortB)) {
                 return 0;
             }

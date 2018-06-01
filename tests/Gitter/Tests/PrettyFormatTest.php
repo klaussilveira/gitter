@@ -35,16 +35,16 @@ class PrettyFormatTest extends TestCase
             array(
                 '<item><tag><inner_tag>value</inner_tag></tag></item>',
                 array(array('tag' => array(array('inner_tag' => 'value')))),
-            )
+            ),
         );
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testIsNotParsingWithoutData()
     {
-        $format = new PrettyFormat;
+        $format = new PrettyFormat();
         $format->parse('');
     }
 }

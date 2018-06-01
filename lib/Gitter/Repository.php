@@ -11,10 +11,10 @@
 
 namespace Gitter;
 
-use Gitter\Model\Commit\Commit;
-use Gitter\Model\Tree;
 use Gitter\Model\Blob;
+use Gitter\Model\Commit\Commit;
 use Gitter\Model\Commit\Diff;
+use Gitter\Model\Tree;
 use Gitter\Statistics\StatisticsInterface;
 
 class Repository
@@ -33,7 +33,6 @@ class Repository
 
     /**
      * @param  bool $value
-     * @return void
      */
     public function setCommitsHaveBeenParsed($value)
     {
@@ -41,7 +40,7 @@ class Repository
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getCommitsHaveBeenParsed()
     {
@@ -49,7 +48,7 @@ class Repository
     }
 
     /**
-     * Create a new git repository
+     * Create a new git repository.
      */
     public function create($bare = null)
     {
@@ -66,7 +65,7 @@ class Repository
     }
 
     /**
-     * Get a git configuration variable
+     * Get a git configuration variable.
      *
      * @param string $key Configuration key
      */
@@ -78,7 +77,7 @@ class Repository
     }
 
     /**
-     * Set a git configuration variable
+     * Set a git configuration variable.
      *
      * @param string $key   Configuration key
      * @param string $value Configuration value
@@ -91,11 +90,11 @@ class Repository
     }
 
     /**
-     * Add statistic aggregator
+     * Add statistic aggregator.
      *
      * @param StatisticsInterface|array $statistics
      */
-    public function addStatistics ($statistics)
+    public function addStatistics($statistics)
     {
         if (!is_array($statistics)) {
             $statistics = array($statistics);
@@ -108,13 +107,13 @@ class Repository
     }
 
     /**
-     * Get statistic aggregators
+     * Get statistic aggregators.
      *
      * @return array
      */
-    public function getStatistics ()
+    public function getStatistics()
     {
-        if ($this->getCommitsHaveBeenParsed() === false) {
+        if (false === $this->getCommitsHaveBeenParsed()) {
             $this->getCommits();
         }
 
@@ -126,7 +125,7 @@ class Repository
     }
 
     /**
-     * Add untracked files
+     * Add untracked files.
      *
      * @param mixed $files Files to be added to the repository
      */
@@ -144,17 +143,17 @@ class Repository
     }
 
     /**
-     * Add all untracked files
+     * Add all untracked files.
      */
     public function addAll()
     {
-        $this->getClient()->run($this, "add -A");
+        $this->getClient()->run($this, 'add -A');
 
         return $this;
     }
 
     /**
-     * Commit changes to the repository
+     * Commit changes to the repository.
      *
      * @param string $message Description of the changes made
      */
@@ -166,7 +165,7 @@ class Repository
     }
 
     /**
-     * Checkout a branch
+     * Checkout a branch.
      *
      * @param string $branch Branch to be checked out
      */
@@ -178,24 +177,24 @@ class Repository
     }
 
     /**
-     * Pull repository changes
+     * Pull repository changes.
      */
     public function pull()
     {
-        $this->getClient()->run($this, "pull");
+        $this->getClient()->run($this, 'pull');
 
         return $this;
     }
 
     /**
-     * Update remote references
+     * Update remote references.
      *
      * @param string $repository Repository to be pushed
      * @param string $refspec    Refspec for the push
      */
     public function push($repository = null, $refspec = null)
     {
-        $command = "push";
+        $command = 'push';
 
         if ($repository) {
             $command .= " $repository";
@@ -211,11 +210,11 @@ class Repository
     }
 
     /**
-     * Get name of repository (top level directory)
+     * Get name of repository (top level directory).
      *
      * @return string
      */
-    public function getName ()
+    public function getName()
     {
         $name = rtrim($this->path, '/');
 
@@ -227,7 +226,7 @@ class Repository
     }
 
     /**
-     * Show a list of the repository branches
+     * Show a list of the repository branches.
      *
      * @return array List of branches
      */
@@ -239,7 +238,7 @@ class Repository
             return $cache[$this->path];
         }
 
-        $branches = $this->getClient()->run($this, "branch");
+        $branches = $this->getClient()->run($this, 'branch');
         $branches = explode("\n", $branches);
         $branches = array_filter(preg_replace('/[\*\s]/', '', $branches));
 
@@ -250,7 +249,7 @@ class Repository
         // Since we've stripped whitespace, the result "* (detached from "
         // and "* (no branch)" that is displayed in detached HEAD state
         // becomes "(detachedfrom" and "(nobranch)" respectively.
-        if ((strpos($branches[0], '(detachedfrom') === 0) || ($branches[0] === '(nobranch)')) {
+        if ((0 === strpos($branches[0], '(detachedfrom')) || ('(nobranch)' === $branches[0])) {
             $branches = array_slice($branches, 1);
         }
 
@@ -258,18 +257,18 @@ class Repository
     }
 
     /**
-     * Return the current repository branch
+     * Return the current repository branch.
      *
-     * @return mixed Current repository branch as a string, or NULL if in
-     * detached HEAD state.
+     * @return mixed current repository branch as a string, or NULL if in
+     * detached HEAD state
      */
     public function getCurrentBranch()
     {
-        $branches = $this->getClient()->run($this, "branch");
+        $branches = $this->getClient()->run($this, 'branch');
         $branches = explode("\n", $branches);
 
         foreach ($branches as $branch) {
-            if ($branch[0] === '*') {
+            if ('*' === $branch[0]) {
                 if (preg_match('/(detached|no branch)/', $branch)) {
                     return null;
                 }
@@ -280,10 +279,11 @@ class Repository
     }
 
     /**
-     * Check if a specified branch exists
+     * Check if a specified branch exists.
      *
      * @param  string  $branch Branch to be checked
-     * @return boolean True if the branch exists
+     *
+     * @return bool True if the branch exists
      */
     public function hasBranch($branch)
     {
@@ -294,7 +294,7 @@ class Repository
     }
 
     /**
-     * Create a new repository branch
+     * Create a new repository branch.
      *
      * @param string $branch Branch name
      */
@@ -304,13 +304,13 @@ class Repository
     }
 
     /**
-     * Create a new repository tag
+     * Create a new repository tag.
      *
      * @param string $tag Tag name
      */
     public function createTag($tag, $message = null)
     {
-        $command = "tag";
+        $command = 'tag';
 
         if ($message) {
             $command .= " -a -m '$message'";
@@ -322,7 +322,7 @@ class Repository
     }
 
     /**
-     * Show a list of the repository tags
+     * Show a list of the repository tags.
      *
      * @return array List of tags
      */
@@ -334,21 +334,21 @@ class Repository
             return $cache[$this->path];
         }
 
-        $tags = $this->getClient()->run($this, "tag");
+        $tags = $this->getClient()->run($this, 'tag');
         $tags = explode("\n", $tags);
         array_pop($tags);
 
         if (empty($tags[0])) {
-            return $cache[$this->path] = NULL;
+            return $cache[$this->path] = null;
         }
 
         return $cache[$this->path] = $tags;
     }
 
     /**
-     * Show the amount of commits on the repository
+     * Show the amount of commits on the repository.
      *
-     * @return integer Total number of commits
+     * @return int Total number of commits
      */
     public function getTotalCommits($file = null)
     {
@@ -364,13 +364,13 @@ class Repository
     }
 
     /**
-     * Show the repository commit log
+     * Show the repository commit log.
      *
      * @return array Commit log
      */
     public function getCommits($file = null)
     {
-        $command = "log --pretty=format:\"<item><hash>%H</hash><short_hash>%h</short_hash><tree>%T</tree><parents>%P</parents><author>%an</author><author_email>%ae</author_email><date>%at</date><commiter>%cn</commiter><commiter_email>%ce</commiter_email><commiter_date>%ct</commiter_date><message><![CDATA[%s]]></message></item>\"";
+        $command = 'log --pretty=format:"<item><hash>%H</hash><short_hash>%h</short_hash><tree>%T</tree><parents>%P</parents><author>%an</author><author_email>%ae</author_email><date>%at</date><commiter>%cn</commiter><commiter_email>%ce</commiter_email><commiter_date>%ct</commiter_date><message><![CDATA[%s]]></message></item>"';
 
         if ($file) {
             $command .= " $file";
@@ -379,7 +379,7 @@ class Repository
         $logs = $this->getPrettyFormat($command);
 
         foreach ($logs as $log) {
-            $commit = new Commit;
+            $commit = new Commit();
             $commit->importData($log);
             $commits[] = $commit;
 
@@ -394,9 +394,10 @@ class Repository
     }
 
     /**
-     * Show the data from a specific commit
+     * Show the data from a specific commit.
      *
      * @param  string $commitHash Hash of the specific commit to read data
+     *
      * @return array  Commit data
      */
     public function getCommit($commitHash)
@@ -413,9 +414,9 @@ class Repository
         array_shift($logs);
 
         // Read commit metadata
-        $format = new PrettyFormat;
+        $format = new PrettyFormat();
         $data = $format->parse($commitInfo);
-        $commit = new Commit;
+        $commit = new Commit();
         $commit->importData($data[0]);
 
         if (empty($logs[1])) {
@@ -428,9 +429,10 @@ class Repository
     }
 
     /**
-     * Read diff logs and generate a collection of diffs
+     * Read diff logs and generate a collection of diffs.
      *
      * @param array $logs  Array of log rows
+     *
      * @return array       Array of diffs
      */
     public function readDiffLogs(array $logs)
@@ -444,7 +446,7 @@ class Repository
                     $diffs[] = $diff;
                 }
 
-                $diff = new Diff;
+                $diff = new Diff();
                 if (preg_match('/^diff --[\S]+ a\/?(.+) b\/?/', $log, $name)) {
                     $diff->setFile($name[1]);
                 }
@@ -477,16 +479,16 @@ class Repository
 
             if (!empty($log)) {
                 switch ($log[0]) {
-                    case "@":
+                    case '@':
                         // Set the line numbers
                         preg_match('/@@ -([0-9]+)/', $log, $matches);
                         $lineNumOld = $matches[1] - 1;
                         $lineNumNew = $matches[1] - 1;
                         break;
-                    case "-":
+                    case '-':
                         $lineNumOld++;
                         break;
-                    case "+":
+                    case '+':
                         $lineNumNew++;
                         break;
                     default:
@@ -515,8 +517,9 @@ class Repository
      *
      * @param $default Optional branch to default to if in detached HEAD state.
      * If not passed, just grabs the first branch listed.
+     *
      * @return string the name of the HEAD branch, or a backup option if
-     * in detached HEAD state.
+     * in detached HEAD state
      */
     public function getHead($default = null)
     {
@@ -532,13 +535,13 @@ class Repository
             $m = array();
             if (preg_match('#ref:\srefs/heads/(.+)#', $line, $m)) {
                 if ($this->hasBranch($m[1])) {
-                  return $m[1];
+                    return $m[1];
                 }
             }
         }
 
         // If we were given a default branch and it exists, return that.
-        if ($default !== null && $this->hasBranch($default)) {
+        if (null !== $default && $this->hasBranch($default)) {
             return $default;
         }
 
@@ -553,9 +556,10 @@ class Repository
     }
 
     /**
-     * Extract the tree hash for a given branch or tree reference
+     * Extract the tree hash for a given branch or tree reference.
      *
      * @param  string $branch
+     *
      * @return string
      */
     public function getBranchTree($branch)
@@ -563,13 +567,14 @@ class Repository
         $hash = $this->getClient()->run($this, "log --pretty=\"%T\" --max-count=1 $branch");
         $hash = trim($hash, "\r\n ");
 
-        return $hash ? : false;
+        return $hash ?: false;
     }
 
     /**
-     * Get the Tree for the provided folder
+     * Get the Tree for the provided folder.
      *
      * @param  string $tree Folder that will be parsed
+     *
      * @return Tree   Instance of Tree for the provided folder
      */
     public function getTree($tree)
@@ -581,9 +586,10 @@ class Repository
     }
 
     /**
-     * Get the Blob for the provided file
+     * Get the Blob for the provided file.
      *
      * @param  string $blob File that will be parsed
+     *
      * @return Blob   Instance of Blob for the provided file
      */
     public function getBlob($blob)
@@ -592,9 +598,10 @@ class Repository
     }
 
     /**
-     * Blames the provided file and parses the output
+     * Blames the provided file and parses the output.
      *
      * @param  string $file File that will be blamed
+     *
      * @return array  Commits hashes containing the lines
      */
     public function getBlame($file)
@@ -606,7 +613,7 @@ class Repository
         $i = 0;
         $previousCommit = '';
         foreach ($logs as $log) {
-            if ($log == '') {
+            if ('' == $log) {
                 continue;
             }
 
@@ -614,7 +621,7 @@ class Repository
 
             $currentCommit = $match[1][0];
             if ($currentCommit != $previousCommit) {
-                ++$i;
+                $i++;
                 $blame[$i] = array('line' => '', 'commit' => $currentCommit);
             }
 
@@ -626,7 +633,7 @@ class Repository
     }
 
     /**
-     * Get the current Repository path
+     * Get the current Repository path.
      *
      * @return string Path where the repository is located
      */
@@ -636,7 +643,7 @@ class Repository
     }
 
     /**
-     * Set the current Repository path
+     * Set the current Repository path.
      *
      * @param string $path Path where the repository is located
      */
@@ -646,7 +653,7 @@ class Repository
     }
 
     /**
-     * Get the current Client instance
+     * Get the current Client instance.
      *
      * @return Client Client instance
      */
@@ -656,7 +663,7 @@ class Repository
     }
 
     /**
-     * Set the Client
+     * Set the Client.
      *
      * @param Client $path Client instance
      */
@@ -668,15 +675,16 @@ class Repository
     }
 
     /**
-     * Get and parse the output of a git command with a XML-based pretty format
+     * Get and parse the output of a git command with a XML-based pretty format.
      *
      * @param  string $command Command to be run by git
+     *
      * @return array  Parsed command output
      */
     public function getPrettyFormat($command)
     {
         $output = $this->getClient()->run($this, $command);
-        $format = new PrettyFormat;
+        $format = new PrettyFormat();
 
         return $format->parse($output);
     }

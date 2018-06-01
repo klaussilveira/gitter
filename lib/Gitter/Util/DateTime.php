@@ -1,4 +1,5 @@
 <?php
+
 // lib/Gitter/Util/DateTime.php
 
 /*
@@ -17,7 +18,7 @@ namespace Gitter\Util;
  * the $time parameter either is a UNIX timestamp (e.g. @946684800) or specifies a timezone
  * (e.g. 2010-01-28T15:00:00+02:00).
  *
- * @link https://github.com/klaussilveira/gitlist/issues/140
+ * @see https://github.com/klaussilveira/gitlist/issues/140
  */
 class DateTime extends \DateTime
 {
@@ -27,10 +28,12 @@ class DateTime extends \DateTime
     const UNIX_TIMESTAMP_PATTERN = '/^@\d+$/';
 
     /**
-     * @param string       $time     A date/time string.
-     * @param DateTimeZone $timezone A DateTimeZone object representing the desired time zone.
-     * @return DateTime A new DateTime instance.
-     * @link http://php.net/manual/en/datetime.construct.php
+     * @param string       $time     a date/time string
+     * @param DateTimeZone $timezone a DateTimeZone object representing the desired time zone
+     *
+     * @return DateTime a new DateTime instance
+     *
+     * @see http://php.net/manual/en/datetime.construct.php
      */
     public function __construct($time = 'now', \DateTimeZone $timezone = null)
     {
@@ -52,7 +55,8 @@ class DateTime extends \DateTime
     /**
      * Checks if an UNIX timestamp is passed.
      *
-     * @param string $time A date/time string.
+     * @param string $time a date/time string
+     *
      * @return bool Returns true if the $time parameter is a UNIX timestamp
      */
     protected function isUnixTimestamp($time)

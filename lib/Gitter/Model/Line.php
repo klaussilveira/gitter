@@ -19,15 +19,15 @@ class Line extends AbstractModel
     public function __construct($data)
     {
         if (!empty($data)) {
-            if ($data[0] == '@') {
+            if ('@' == $data[0]) {
                 $this->setType('chunk');
             }
 
-            if ($data[0] == '-') {
+            if ('-' == $data[0]) {
                 $this->setType('old');
             }
 
-            if ($data[0] == '+') {
+            if ('+' == $data[0]) {
                 $this->setType('new');
             }
         }

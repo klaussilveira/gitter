@@ -1,7 +1,9 @@
 <?php
+
 namespace Gitter\Util;
 
-class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
+class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
+{
     /**
      * @var array
      */
@@ -44,7 +46,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable {
      */
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
+        if (null === $offset) {
             $this->items[] = $value;
         } else {
             $this->items[$offset] = $value;
