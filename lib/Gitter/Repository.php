@@ -420,7 +420,7 @@ class Repository
         $commit->importData($data[0]);
 
         if (empty($logs[1])) {
-            $logs = explode("\n", $this->getClient()->run($this, 'diff ' . $commitHash . '~1..' . $commitHash));
+            $logs = explode("\n", $this->getClient()->run($this, 'diff ' . $commitHash . '..' . $commitHash));
         }
 
         $commit->setDiffs($this->readDiffLogs($logs));
