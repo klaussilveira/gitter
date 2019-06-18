@@ -13,13 +13,25 @@ namespace Gitter;
 
 class PrettyFormat
 {
+    public function escapeXml($output)
+    {
+      return preg_replace('/[\x00-\x1f]/', '?', $output);
+    }
+
     public function parse($output)
     {
         if (empty($output)) {
             throw new \RuntimeException('No data available');
         }
 
-        $data = $this->iteratorToArray(new \SimpleXmlIterator("<data>$output</data>"));
+        try {
+          $xml = new \SimpleXmlIterator("<data>$output</data>");
+        } catch (\Exception $e) {
+          $output = $this->escapeXml($output);
+          $xml = new \SimpleXmlIterator("<data>$output</data>");
+        }
+
+        $data = $this->iteratorToArray($xml);
 
         return $data['item'];
     }

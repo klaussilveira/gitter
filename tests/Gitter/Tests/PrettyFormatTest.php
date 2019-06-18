@@ -36,6 +36,10 @@ class PrettyFormatTest extends TestCase
                 '<item><tag><inner_tag>value</inner_tag></tag></item>',
                 array(array('tag' => array(array('inner_tag' => 'value')))),
             ),
+            array(
+                "<item><tag>value\x1B</tag><tag2>value2</tag2></item>",
+                array(array('tag' => 'value?', 'tag2' => 'value2')),
+            ),
         );
     }
 
