@@ -1,5 +1,5 @@
 # Gitter
-[![Build Status](https://secure.travis-ci.org/klaussilveira/gitter.png)](http://travis-ci.org/klaussilveira/gitter)
+[![Latest Stable Version](https://poser.pugx.org/klaussilveira/gitter/v/stable.svg)](https://packagist.org/packages/klaussilveira/gitter) [![License](https://poser.pugx.org/klaussilveira/gitter/license.svg)](https://packagist.org/packages/klaussilveira/gitter) ![Build Status](https://github.com/klaussilveira/gitter/actions/workflows/php.yml/badge.svg)
 
 Gitter allows you to interact in an object oriented manner with Git repositories
 via PHP. The main goal of the library is not to replace the system `git` command,

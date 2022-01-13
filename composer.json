@@ -15,16 +15,24 @@
     ],
     "require": {
         "php": ">=5.3",
-        "doctrine/instantiator": "1.0.*",
-        "phpdocumentor/reflection-docblock": "2.0.*",
-        "sebastian/comparator": "1.2.*",
-        "sebastian/recursion-context": "1.0.*",
-        "symfony/process": "2.8.*"
+        "symfony/process": "^2.8"
     },
     "require-dev": {
-        "symfony/filesystem": "2.8.*",
-        "phpunit/phpunit": "~4.8",
+        "symfony/filesystem": "^2.8",
+        "phpunit/phpunit": "~8",
         "mockery/mockery": "0.9.1"
+    },
+    "scripts": {
+        "test": [
+            "@unit",
+            "@lint"
+        ],
+        "lint": [
+            "find src -name '*.php' -print0 | xargs -0 -n1 -P8 php -l"
+        ],
+        "unit": [
+            "vendor/bin/phpunit"
+        ]
     },
     "minimum-stability": "stable",
     "autoload": {
