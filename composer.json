@@ -15,10 +15,10 @@
     ],
     "require": {
         "php": ">=5.3",
-        "symfony/process": "^2.8"
+        "symfony/process": "^5.0 || ^6.0"
     },
     "require-dev": {
-        "symfony/filesystem": "^2.8",
+        "symfony/filesystem": "^5.0 || ^6.0",
         "phpunit/phpunit": "~8",
         "mockery/mockery": "0.9.1"
     },
