@@ -11,24 +11,35 @@
 
 namespace Gitter;
 
+use Gitter\Constants\Exceptions;
+use SimpleXMLIterator;
+
 class PrettyFormat
 {
-    public function escapeXml($output)
+    /**
+     * @param string $output
+     * @return array|string|null
+     */
+    public function escapeXml(string $output): array|string|null
     {
-      return preg_replace('/[\x00-\x1f]/', '?', $output);
+        return preg_replace('/[\x00-\x1f]/', '?', $output);
     }
 
-    public function parse($output)
+    /**
+     * @param string $output
+     * @return mixed
+     */
+    public function parse(string $output): mixed
     {
         if (empty($output)) {
-            throw new \RuntimeException('No data available');
+            throw new \RuntimeException(Exceptions::NO_DATA_AVAILABLE);
         }
 
         try {
-          $xml = new \SimpleXmlIterator("<data>$output</data>");
+            $xml = new \SimpleXmlIterator("<data>$output</data>");
         } catch (\Exception $e) {
-          $output = $this->escapeXml($output);
-          $xml = new \SimpleXmlIterator("<data>$output</data>");
+            $output = $this->escapeXml($output);
+            $xml = new \SimpleXmlIterator("<data>$output</data>");
         }
 
         $data = $this->iteratorToArray($xml);
@@ -36,8 +47,14 @@ class PrettyFormat
         return $data['item'];
     }
 
-    protected function iteratorToArray($iterator)
+    /**
+     * @param SimpleXmlIterator $iterator
+     * @return array
+     */
+    protected function iteratorToArray(SimpleXmlIterator $iterator): array
     {
+        $data = [];
+
         foreach ($iterator as $key => $item) {
             if ($iterator->hasChildren()) {
                 $data[$key][] = $this->iteratorToArray($item);

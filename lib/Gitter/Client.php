@@ -11,18 +11,27 @@
 
 namespace Gitter;
 
+use Gitter\Constants\Commands;
+use Gitter\Constants\Exceptions;
+use Gitter\Constants\Extra;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class Client
 {
-    protected $path;
+    /**
+     * @var string
+     */
+    protected string $path;
 
-    public function __construct($path = null)
+    /**
+     * @param string|null $path
+     */
+    public function __construct(string $path = null)
     {
         if (!$path) {
             $finder = new ExecutableFinder();
-            $path = $finder->find('git', '/usr/bin/git');
+            $path = $finder->find(Commands::GIT, Commands::GIT_PATH);
         }
 
         $this->setPath($path);
@@ -31,14 +40,15 @@ class Client
     /**
      * Creates a new repository on the specified path.
      *
-     * @param  string     $path Path where the new repository will be created
+     * @param string $path Path where the new repository will be created
      *
      * @return Repository Instance of Repository
      */
-    public function createRepository($path, $bare = null)
+    public function createRepository(string $path, $bare = null): Repository
     {
-        if (file_exists($path . '/.git/HEAD') && !file_exists($path . '/HEAD')) {
-            throw new \RuntimeException('A GIT repository already exists at ' . $path);
+        if (file_exists($path . Extra::GIT_HEAD) && !file_exists($path . Extra::HEAD)) {
+            $exceptionMessage = sprintf("%s %s", Exceptions::GIT_REPOSITORY_EXISTS, $path);
+            throw new \RuntimeException($exceptionMessage);
         }
 
         $repository = new Repository($path, $this);
@@ -49,26 +59,33 @@ class Client
     /**
      * Opens a repository at the specified path.
      *
-     * @param  string     $path Path where the repository is located
+     * @param string $path Path where the repository is located
      *
      * @return Repository Instance of Repository
      */
-    public function getRepository($path)
+    public function getRepository(string $path): Repository
     {
-        if (!file_exists($path) || !file_exists($path . '/.git/HEAD') && !file_exists($path . '/HEAD')) {
-            throw new \RuntimeException('There is no GIT repository at ' . $path);
+        if (!file_exists($path) || !file_exists($path . Extra::GIT_HEAD) && !file_exists($path . Extra::HEAD)) {
+            $exceptionMessage = sprintf("%s %s", Exceptions::NO_GIT_REPOSITORY, $path);
+            throw new \RuntimeException($exceptionMessage);
         }
 
         return new Repository($path, $this);
     }
 
-    public function run($repository, $command)
+    /**
+     * @param $repository
+     * @param string $command
+     * @return string
+     */
+    public function run($repository, string $command): string
     {
-        if (version_compare($this->getVersion(), '1.7.2', '>=')) {
-            $command = '-c "color.ui"=false ' . $command;
+        if (version_compare($this->getVersion(), Extra::V_1_7_2, '>=')) {
+            $command = sprintf('-c "color.ui"=false %s', $command);
         }
 
-        $process = new Process($this->getPath() . ' ' . $command, $repository->getPath());
+        $commandLine = sprintf("%s %s", $this->getPath(), $command);
+        $process = new Process($commandLine, $repository->getPath());
         $process->setTimeout(180);
         $process->run();
 
@@ -79,7 +96,10 @@ class Client
         return $process->getOutput();
     }
 
-    public function getVersion()
+    /**
+     * @return mixed|string
+     */
+    public function getVersion(): mixed
     {
         static $version;
 
@@ -87,7 +107,8 @@ class Client
             return $version;
         }
 
-        $process = new Process($this->getPath() . ' --version');
+        $commandLine = sprintf("%s %s",$this->getPath(), Commands::VERSION);
+        $process = new Process($commandLine);
         $process->run();
 
         if (!$process->isSuccessful()) {
@@ -104,7 +125,7 @@ class Client
      *
      * @return string Path where the Git binary is located
      */
-    protected function getPath()
+    protected function getPath(): string
     {
         return escapeshellarg($this->path);
     }
@@ -114,7 +135,7 @@ class Client
      *
      * @param string $path Path where the Git binary is located
      */
-    protected function setPath($path)
+    protected function setPath(string $path): self
     {
         $this->path = $path;
 
