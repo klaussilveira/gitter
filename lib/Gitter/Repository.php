@@ -54,7 +54,8 @@ class Repository
      */
     public function create($bare = null): self
     {
-        mkdir($this->getPath());
+        (!is_dir($this->getPath())) && mkdir($this->getPath());
+
         $command = Commands::INIT;
 
         if ($bare) {

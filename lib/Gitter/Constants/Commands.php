@@ -19,4 +19,6 @@ abstract class Commands
     public const DIFF = 'diff';
     public const BLAME = 'blame';
     public const VERSION = '--version';
+    public const LOG = 'log';
+    public const LOG_ONELINE = 'log --oneline';
 }
